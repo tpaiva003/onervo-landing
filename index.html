@@ -3,384 +3,746 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>O Nervo — Toca no nervo do teu orçamento</title>
-    <meta name="description" content="Controlo orçamental inteligente para PMEs portuguesas. De Excel a decisão em 10 minutos.">
+    <title>O Nervo — Toca no nervo do teu orcamento</title>
+    <meta name="description" content="86% das PMEs gerem orçamentos em Excel. Sem versão única, sem auditoria, sem confiança. Estamos a acabar com isso.">
     <meta property="og:title" content="O Nervo — Toca no nervo do teu orçamento">
-    <meta property="og:description" content="Controlo orçamental inteligente para PMEs portuguesas. De Excel a decisão em 10 minutos.">
+    <meta property="og:description" content="86% das PMEs gerem orçamentos em Excel. Sem versão única, sem auditoria, sem confiança. Estamos a acabar com isso.">
     <meta property="og:type" content="website">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
     <style>
-        * {
+        *,
+        *::before,
+        *::after {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
 
+        :root {
+            --bg: #050505;
+            --surface: #0e0e0e;
+            --border: rgba(255, 255, 255, 0.06);
+            --text-primary: #f0f0f0;
+            --text-secondary: #8a8a8a;
+            --text-muted: #555555;
+            --emerald: #036016;
+            --emerald-light: #047a1c;
+            --gold: #ECD444;
+            --gold-muted: #d4be3b;
+            --radius-lg: 1.5rem;
+            --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        html {
+            scroll-behavior: smooth;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
         body {
-            font-family: 'Inter', sans-serif;
-            background-color: #000000;
-            color: #FFFFFF;
-            min-height: 100vh;
+            font-family: 'Space Grotesk', sans-serif;
+            background-color: var(--bg);
+            color: var(--text-primary);
+            min-height: 100dvh;
+            overflow-x: hidden;
+            line-height: 1.6;
+        }
+
+        /* --- Noise Overlay --- */
+        body::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            z-index: 50;
+            pointer-events: none;
+            opacity: 0.025;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+            background-repeat: repeat;
+            background-size: 256px 256px;
+        }
+
+        /* --- Scroll Reveal --- */
+        .reveal {
+            opacity: 0;
+            transform: translateY(2.5rem);
+            filter: blur(4px);
+            transition: opacity 0.9s var(--ease-out-expo),
+                        transform 0.9s var(--ease-out-expo),
+                        filter 0.9s var(--ease-out-expo);
+        }
+
+        .reveal.visible {
+            opacity: 1;
+            transform: translateY(0);
+            filter: blur(0);
+        }
+
+        .reveal-delay-1 { transition-delay: 0.1s; }
+        .reveal-delay-2 { transition-delay: 0.2s; }
+        .reveal-delay-3 { transition-delay: 0.3s; }
+        .reveal-delay-4 { transition-delay: 0.4s; }
+        .reveal-delay-5 { transition-delay: 0.5s; }
+
+        /* --- Layout --- */
+        .page-wrapper {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 clamp(1.5rem, 5vw, 4rem);
+        }
+
+        section {
+            padding: clamp(4rem, 10vw, 8rem) 0;
+        }
+
+        /* --- Navigation / Logo Bar --- */
+        .nav {
+            padding: 2rem 0;
             display: flex;
-            flex-direction: column;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .logo-mark {
+            display: inline-flex;
             align-items: center;
             justify-content: center;
-            padding: 40px 20px;
-            overflow-x: hidden;
-        }
-
-        .container {
-            max-width: 640px;
-            width: 100%;
-            text-align: center;
-        }
-
-        .logo {
-            font-size: 64px;
-            font-weight: 900;
-            letter-spacing: -2px;
-            margin-bottom: 8px;
-        }
-
-        .logo-n {
-            display: inline-block;
-            width: 80px;
-            height: 80px;
-            background: #FFFFFF;
-            color: #000000;
-            font-size: 52px;
-            font-weight: 900;
-            line-height: 80px;
-            text-align: center;
-            margin-bottom: 32px;
-        }
-
-        .tagline {
-            font-size: 32px;
+            width: 52px;
+            height: 52px;
+            background: var(--bg);
+            color: var(--text-primary);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            font-size: 28px;
             font-weight: 700;
-            line-height: 1.2;
-            margin-bottom: 24px;
-            letter-spacing: -0.5px;
+            letter-spacing: -1px;
+            transition: transform 0.5s var(--ease-out-expo);
         }
 
-        .tagline .highlight {
-            color: #ECD444;
+        .logo-mark:hover {
+            transform: scale(0.96);
         }
 
-        .description {
-            font-size: 18px;
-            font-weight: 400;
-            color: #999999;
-            line-height: 1.6;
-            margin-bottom: 48px;
+        .nav-status {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.7rem;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            color: var(--text-muted);
         }
 
-        .stats {
-            display: flex;
-            justify-content: center;
-            gap: 48px;
-            margin-bottom: 48px;
+        .nav-status span {
+            display: inline-block;
+            width: 6px;
+            height: 6px;
+            background: var(--emerald);
+            border-radius: 50%;
+            margin-right: 8px;
+            animation: pulse-dot 2.5s ease-in-out infinite;
         }
 
-        .stat-item {
-            text-align: center;
+        @keyframes pulse-dot {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.4; transform: scale(0.8); }
+        }
+
+        /* --- Hero --- */
+        .hero {
+            padding-top: clamp(3rem, 8vw, 6rem);
+            padding-bottom: clamp(4rem, 10vw, 8rem);
+        }
+
+        .hero-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 3rem;
+        }
+
+        .hero-eyebrow {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.7rem;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            color: var(--gold-muted);
+            margin-bottom: 1.5rem;
+        }
+
+        .hero-title {
+            font-size: clamp(2.8rem, 7vw, 5.5rem);
+            font-weight: 700;
+            line-height: 0.95;
+            letter-spacing: -0.03em;
+            max-width: 14ch;
+        }
+
+        .hero-title .accent {
+            color: var(--gold);
+        }
+
+        .hero-description {
+            font-size: clamp(1.05rem, 1.8vw, 1.25rem);
+            color: var(--text-secondary);
+            line-height: 1.7;
+            max-width: 52ch;
+            margin-top: 2rem;
+        }
+
+        .hero-closer {
+            color: var(--text-primary);
+            font-weight: 600;
+            margin-top: 0.75rem;
+        }
+
+        /* --- Hero Inline Form --- */
+        .hero-form {
+            margin-top: 2.5rem;
+            max-width: 520px;
+        }
+
+        .hero-form-row {
+            display: grid;
+            grid-template-columns: 1fr auto;
+            gap: 0.75rem;
+        }
+
+        .hero-form-row .email-input {
+            width: 100%;
+        }
+
+        .hero-submit-btn {
+            width: auto;
+            padding: 1rem 2rem;
+            white-space: nowrap;
+            margin-top: 0;
+        }
+
+        .hero-form-hint {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.65rem;
+            letter-spacing: 0.08em;
+            color: var(--text-muted);
+            margin-top: 0.75rem;
+        }
+
+        /* --- Stats --- */
+        .stats-section {
+            border-top: 1px solid var(--border);
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 1px;
+            background: var(--border);
+        }
+
+        .stat-cell {
+            background: var(--bg);
+            padding: clamp(2rem, 4vw, 3.5rem) clamp(1.5rem, 3vw, 2.5rem);
         }
 
         .stat-number {
-            font-size: 36px;
-            font-weight: 900;
-            color: #ECD444;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: clamp(2rem, 4vw, 3.2rem);
+            font-weight: 500;
+            color: var(--gold);
+            letter-spacing: -0.02em;
+            line-height: 1;
         }
 
         .stat-label {
-            font-size: 13px;
-            color: #666666;
-            margin-top: 4px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.65rem;
+            letter-spacing: 0.12em;
             text-transform: uppercase;
-            letter-spacing: 1px;
+            color: var(--text-muted);
+            margin-top: 0.75rem;
         }
 
-        .divider {
-            width: 60px;
-            height: 3px;
-            background: #036016;
-            margin: 0 auto 48px;
+        .stat-description {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            margin-top: 0.5rem;
+            line-height: 1.5;
         }
 
+        /* --- Pain Points --- */
+        .pain-section {
+            border-top: 1px solid var(--border);
+        }
+
+        .pain-header {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 3rem;
+            align-items: end;
+            margin-bottom: clamp(2.5rem, 5vw, 4rem);
+        }
+
+        .pain-label {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.7rem;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            color: var(--text-muted);
+        }
+
+        .pain-title {
+            font-size: clamp(1.6rem, 3vw, 2.4rem);
+            font-weight: 700;
+            letter-spacing: -0.02em;
+            line-height: 1.1;
+        }
+
+        .pain-subtitle {
+            font-size: 0.95rem;
+            color: var(--text-secondary);
+            line-height: 1.6;
+            max-width: 40ch;
+        }
+
+        .pain-list {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1px;
+            background: var(--border);
+        }
+
+        .pain-item {
+            background: var(--bg);
+            padding: clamp(1.5rem, 3vw, 2.5rem);
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .pain-index {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.65rem;
+            letter-spacing: 0.1em;
+            color: var(--text-muted);
+        }
+
+        .pain-text {
+            font-size: clamp(0.95rem, 1.5vw, 1.1rem);
+            color: var(--text-secondary);
+            line-height: 1.5;
+        }
+
+        .pain-text strong {
+            color: var(--text-primary);
+            font-weight: 600;
+        }
+
+        /* --- CTA Section --- */
         .cta-section {
-            margin-bottom: 48px;
+            border-top: 1px solid var(--border);
+        }
+
+        .cta-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: clamp(2rem, 5vw, 4rem);
+            align-items: center;
+        }
+
+        .cta-content {}
+
+        .cta-eyebrow {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.7rem;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            color: var(--emerald-light);
+            margin-bottom: 1.25rem;
         }
 
         .cta-title {
-            font-size: 20px;
-            font-weight: 600;
-            margin-bottom: 8px;
+            font-size: clamp(1.8rem, 3.5vw, 2.8rem);
+            font-weight: 700;
+            letter-spacing: -0.02em;
+            line-height: 1.05;
+            margin-bottom: 1rem;
         }
 
-        .cta-subtitle {
-            font-size: 14px;
-            color: #666666;
-            margin-bottom: 24px;
+        .cta-description {
+            font-size: 0.95rem;
+            color: var(--text-secondary);
+            line-height: 1.6;
+            max-width: 36ch;
         }
 
-        .form-wrapper {
-            display: flex;
-            gap: 12px;
-            max-width: 440px;
-            margin: 0 auto;
+        .cta-form-wrapper {
+            /* Double-bezel container */
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            padding: 6px;
+        }
+
+        .cta-form-inner {
+            background: var(--surface);
+            border-radius: calc(var(--radius-lg) - 4px);
+            padding: clamp(1.5rem, 3vw, 2.5rem);
+            box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.04);
+        }
+
+        .form-label {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.65rem;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            color: var(--text-muted);
+            display: block;
+            margin-bottom: 1rem;
         }
 
         .email-input {
-            flex: 1;
-            padding: 14px 18px;
-            font-size: 16px;
-            font-family: 'Inter', sans-serif;
-            background: #111111;
-            border: 1px solid #333333;
-            color: #FFFFFF;
+            width: 100%;
+            padding: 1rem 1.25rem;
+            font-size: 1rem;
+            font-family: 'Space Grotesk', sans-serif;
+            background: var(--bg);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 0.75rem;
+            color: var(--text-primary);
             outline: none;
-            transition: border-color 0.2s;
+            transition: border-color 0.4s var(--ease-out-expo),
+                        box-shadow 0.4s var(--ease-out-expo);
         }
 
         .email-input::placeholder {
-            color: #555555;
+            color: var(--text-muted);
         }
 
         .email-input:focus {
-            border-color: #036016;
+            border-color: var(--emerald);
+            box-shadow: 0 0 0 3px rgba(3, 96, 22, 0.15);
         }
 
         .submit-btn {
-            padding: 14px 28px;
-            font-size: 16px;
-            font-weight: 700;
-            font-family: 'Inter', sans-serif;
-            background: #036016;
-            color: #FFFFFF;
+            width: 100%;
+            padding: 1rem;
+            font-size: 0.95rem;
+            font-weight: 600;
+            font-family: 'Space Grotesk', sans-serif;
+            background: var(--emerald);
+            color: var(--text-primary);
             border: none;
+            border-radius: 0.75rem;
             cursor: pointer;
-            transition: background-color 0.2s;
-            white-space: nowrap;
+            margin-top: 0.75rem;
+            transition: background-color 0.4s var(--ease-out-expo),
+                        transform 0.15s var(--ease-out-expo);
+            letter-spacing: 0.01em;
         }
 
         .submit-btn:hover {
-            background: #047a1c;
+            background: var(--emerald-light);
+        }
+
+        .submit-btn:active {
+            transform: translateY(1px) scale(0.98);
         }
 
         .success-message {
             display: none;
-            padding: 16px;
-            background: #036016;
-            color: #FFFFFF;
-            font-size: 16px;
+            padding: 1.25rem;
+            background: var(--emerald);
+            color: var(--text-primary);
+            font-size: 0.95rem;
             font-weight: 600;
-            max-width: 440px;
-            margin: 0 auto;
+            border-radius: 0.75rem;
+            text-align: center;
         }
 
-        .pain-points {
-            text-align: left;
-            max-width: 440px;
-            margin: 0 auto 48px;
+        /* --- Footer --- */
+        .site-footer {
+            border-top: 1px solid var(--border);
+            padding: clamp(2rem, 5vw, 3rem) 0;
         }
 
-        .pain-point {
+        .footer-grid {
             display: flex;
-            align-items: flex-start;
-            gap: 12px;
-            padding: 12px 0;
-            border-bottom: 1px solid #1a1a1a;
+            align-items: center;
+            justify-content: space-between;
         }
 
-        .pain-point:last-child {
-            border-bottom: none;
-        }
-
-        .pain-icon {
-            color: #ECD444;
-            font-size: 18px;
-            flex-shrink: 0;
-            margin-top: 2px;
-        }
-
-        .pain-text {
-            font-size: 15px;
-            color: #CCCCCC;
-            line-height: 1.5;
-        }
-
-        .social-links {
+        .footer-links {
             display: flex;
-            justify-content: center;
-            gap: 24px;
-            margin-bottom: 32px;
+            gap: 2rem;
         }
 
-        .social-links a {
-            color: #555555;
+        .footer-links a {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.7rem;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: var(--text-muted);
             text-decoration: none;
-            font-size: 14px;
-            font-weight: 600;
-            transition: color 0.2s;
+            transition: color 0.4s var(--ease-out-expo);
         }
 
-        .social-links a:hover {
-            color: #FFFFFF;
+        .footer-links a:hover {
+            color: var(--text-primary);
         }
 
-        .footer {
-            font-size: 13px;
-            color: #333333;
+        .footer-copy {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.65rem;
+            letter-spacing: 0.08em;
+            color: var(--text-muted);
         }
 
-        .emerald-bar {
+        /* --- Emerald accent bar --- */
+        .accent-bar {
             position: fixed;
             bottom: 0;
             left: 0;
             width: 100%;
-            height: 4px;
-            background: #036016;
+            height: 3px;
+            background: linear-gradient(90deg, var(--emerald), var(--emerald-light));
+            z-index: 40;
         }
 
-        @media (max-width: 480px) {
-            .logo {
-                font-size: 48px;
+        /* --- Responsive --- */
+        @media (max-width: 768px) {
+            .hero-title {
+                max-width: 100%;
             }
 
-            .tagline {
-                font-size: 24px;
+            .hero-form-row {
+                grid-template-columns: 1fr;
             }
 
-            .description {
-                font-size: 16px;
-            }
-
-            .stats {
-                gap: 32px;
-            }
-
-            .stat-number {
-                font-size: 28px;
-            }
-
-            .form-wrapper {
-                flex-direction: column;
-            }
-
-            .submit-btn {
+            .hero-submit-btn {
                 width: 100%;
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .pain-header {
+                grid-template-columns: 1fr;
+                gap: 1.5rem;
+            }
+
+            .pain-list {
+                grid-template-columns: 1fr;
+            }
+
+            .cta-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .footer-grid {
+                flex-direction: column;
+                gap: 1.5rem;
+                text-align: center;
+            }
+
+            .footer-links {
+                order: -1;
             }
         }
     </style>
 </head>
 <body>
 
-    <div class="container">
-        <div class="logo-n">N</div>
+    <div class="page-wrapper">
 
-        <h1 class="tagline">
-            Toca no <span class="highlight">nervo</span><br>
-            do teu orçamento.
-        </h1>
-
-        <p class="description">
-            O teu controlo orçamental não devia viver num Excel.<br>
-            Estamos a construir algo para mudar isso.
-        </p>
-
-        <div class="stats">
-            <div class="stat-item">
-                <div class="stat-number">86%</div>
-                <div class="stat-label">PMEs em Excel</div>
+        <!-- Nav -->
+        <nav class="nav reveal">
+            <div class="logo-mark">N</div>
+            <div class="nav-status">
+                <span></span>Em construção
             </div>
-            <div class="stat-item">
-                <div class="stat-number">400h</div>
-                <div class="stat-label">perdidas/ano</div>
-            </div>
-            <div class="stat-item">
-                <div class="stat-number">10 min</div>
-                <div class="stat-label">é o objetivo</div>
-            </div>
-        </div>
+        </nav>
 
-        <div class="divider"></div>
+        <!-- Hero — Before-After-Bridge + Primary CTA -->
+        <section class="hero">
+            <div class="hero-grid">
+                <div>
+                    <p class="hero-eyebrow reveal reveal-delay-1">50+ equipas. O mesmo problema.</p>
+                    <h1 class="hero-title reveal reveal-delay-2">
+                        Toca no <span class="accent">nervo</span> do teu orçamento.
+                    </h1>
+                    <p class="hero-description reveal reveal-delay-3">
+                        O teu orçamento vive num Excel que ninguém percebe,
+                        numa versão que ninguém confirmou,
+                        com números em que ninguém confia.
+                    </p>
+                    <p class="hero-description hero-closer reveal reveal-delay-3">
+                        Estamos a acabar com isso.
+                    </p>
 
-        <div class="pain-points">
-            <div class="pain-point">
-                <span class="pain-icon">&#10005;</span>
-                <span class="pain-text">Excel com +20 separadores e zero documentação</span>
+                    <!-- Inline waitlist form -->
+                    <div class="hero-form reveal reveal-delay-4">
+                        <form class="hero-form-row" id="hero-waitlist-form" action="https://formspree.io/f/xnjodeda" method="POST">
+                            <input
+                                type="email"
+                                class="email-input"
+                                name="email"
+                                placeholder="nome@empresa.pt"
+                                required
+                            >
+                            <button type="submit" class="submit-btn hero-submit-btn">Entrar na lista</button>
+                        </form>
+                        <div class="success-message" id="hero-success-message">
+                            Estás dentro. Falamos em breve.
+                        </div>
+                        <p class="hero-form-hint">Sem spam. Só o que interessa.</p>
+                    </div>
+                </div>
             </div>
-            <div class="pain-point">
-                <span class="pain-icon">&#10005;</span>
-                <span class="pain-text">3 versões do "orçamento final" — nenhuma final</span>
+        </section>
+
+        <!-- Stats — Cost of Inaction -->
+        <section class="stats-section reveal">
+            <div class="stats-grid">
+                <div class="stat-cell reveal reveal-delay-1">
+                    <div class="stat-number">86%</div>
+                    <div class="stat-label">PMEs em Excel</div>
+                    <p class="stat-description">Sem versão única. Sem auditoria. Sem rede. E toda a gente finge que está tudo bem.</p>
+                </div>
+                <div class="stat-cell reveal reveal-delay-2">
+                    <div class="stat-number">400h</div>
+                    <div class="stat-label">Desperdiçadas / ano</div>
+                    <p class="stat-description">A copiar, colar e rezar para que as fórmulas estejam certas. Todos os meses. Há anos.</p>
+                </div>
+                <div class="stat-cell reveal reveal-delay-3">
+                    <div class="stat-number">10min</div>
+                    <div class="stat-label">Não 10 dias</div>
+                    <p class="stat-description">É tudo o que devias precisar para tomar uma decisão orçamental. Não uma semana.</p>
+                </div>
             </div>
-            <div class="pain-point">
-                <span class="pain-icon">&#10005;</span>
-                <span class="pain-text">Análise de desvios feita "quando há tempo" (nunca)</span>
+        </section>
+
+        <!-- Pain Points — PAS: Problem-Agitate-Solution -->
+        <section class="pain-section">
+            <div class="pain-header">
+                <div class="reveal">
+                    <p class="pain-label">O diagnóstico</p>
+                    <h2 class="pain-title">Vimos isto em todas.</h2>
+                </div>
+                <div class="reveal reveal-delay-2">
+                    <p class="pain-subtitle">50+ equipas financeiras de PMEs portuguesas. Mesmo sector, mesma dimensão, mesmo caos. Ninguém toca no nervo.</p>
+                </div>
             </div>
-            <div class="pain-point">
-                <span class="pain-icon">&#10005;</span>
-                <span class="pain-text">Ninguém confia nos números, mas todos fingem que sim</span>
+
+            <div class="pain-list">
+                <div class="pain-item reveal reveal-delay-1">
+                    <span class="pain-index">01</span>
+                    <p class="pain-text"><strong>Excel com +20 separadores</strong>, zero documentação. O autor saiu da empresa há 2 anos. Ninguém sabe como funciona.</p>
+                </div>
+                <div class="pain-item reveal reveal-delay-2">
+                    <span class="pain-index">02</span>
+                    <p class="pain-text"><strong>3 versões do "orçamento final".</strong> Ninguém sabe qual é a certa. Ninguém pergunta.</p>
+                </div>
+                <div class="pain-item reveal reveal-delay-3">
+                    <span class="pain-index">03</span>
+                    <p class="pain-text"><strong>Análise de desvios</strong> feita "quando há tempo". Tradução: nunca.</p>
+                </div>
+                <div class="pain-item reveal reveal-delay-4">
+                    <span class="pain-index">04</span>
+                    <p class="pain-text"><strong>Toda a gente finge que confia nos números.</strong> Ninguém confia. As decisões pagam o preço.</p>
+                </div>
             </div>
-        </div>
+        </section>
 
-        <div class="cta-section">
-            <h2 class="cta-title">Sê o primeiro a saber.</h2>
-            <p class="cta-subtitle">Deixa o teu email e avisamos quando abrirmos.</p>
-
-            <form class="form-wrapper" id="waitlist-form" action="https://formspree.io/f/xnjodeda" method="POST">
-                <input
-                    type="email"
-                    class="email-input"
-                    name="email"
-                    placeholder="o.teu@email.com"
-                    required
-                    id="email-input"
-                >
-                <button type="submit" class="submit-btn">Quero saber</button>
-            </form>
-
-            <div class="success-message" id="success-message">
-                Estás na lista. Avisamos em breve.
+        <!-- CTA — AIDA: Attention-Interest-Desire-Action -->
+        <section class="cta-section">
+            <div class="cta-grid">
+                <div class="cta-content reveal">
+                    <p class="cta-eyebrow">Acesso antecipado</p>
+                    <h2 class="cta-title">Tens nervo para mudar?</h2>
+                    <p class="cta-description">Estamos a construir o que o Excel nunca vai ser. Deixa o teu email &mdash; avisamos antes de todos.</p>
+                </div>
+                <div class="reveal reveal-delay-2">
+                    <div class="cta-form-wrapper">
+                        <div class="cta-form-inner">
+                            <label class="form-label" for="email-input">O teu email</label>
+                            <form id="waitlist-form" action="https://formspree.io/f/xnjodeda" method="POST">
+                                <input
+                                    type="email"
+                                    class="email-input"
+                                    name="email"
+                                    placeholder="nome@empresa.pt"
+                                    required
+                                    id="email-input"
+                                >
+                                <button type="submit" class="submit-btn">Entrar na lista</button>
+                            </form>
+                            <div class="success-message" id="success-message">
+                                Estás dentro. Falamos em breve.
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
-        </div>
+        </section>
 
-        <div class="social-links">
-            <a href="https://www.linkedin.com/company/onervo-pt" target="_blank">LinkedIn</a>
-            <a href="https://www.instagram.com/onervo.pt" target="_blank">Instagram</a>
-        </div>
+        <!-- Footer -->
+        <footer class="site-footer">
+            <div class="footer-grid">
+                <p class="footer-copy">&copy; 2026 O Nervo &mdash; onervo.pt</p>
+                <div class="footer-links">
+                    <a href="https://www.linkedin.com/company/onervo-pt" target="_blank" rel="noopener">LinkedIn</a>
+                    <a href="https://www.instagram.com/onervo.pt" target="_blank" rel="noopener">Instagram</a>
+                </div>
+            </div>
+        </footer>
 
-        <p class="footer">© 2026 O Nervo — onervo.pt</p>
     </div>
 
-    <div class="emerald-bar"></div>
+    <div class="accent-bar"></div>
 
     <script>
-        const form = document.getElementById('waitlist-form');
-        const successMessage = document.getElementById('success-message');
-
-        form.addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const formData = new FormData(form);
-
-            try {
-                const response = await fetch(form.action, {
-                    method: 'POST',
-                    body: formData,
-                    headers: { 'Accept': 'application/json' }
-                });
-
-                if (response.ok) {
-                    form.style.display = 'none';
-                    successMessage.style.display = 'block';
+        // Scroll reveal with IntersectionObserver
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach((entry) => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
                 }
-            } catch (error) {
-                form.style.display = 'none';
-                successMessage.style.display = 'block';
-            }
+            });
+        }, {
+            threshold: 0.1,
+            rootMargin: '0px 0px -60px 0px'
         });
+
+        document.querySelectorAll('.reveal').forEach((el) => observer.observe(el));
+
+        // Form submission — handles both hero and bottom CTA forms
+        function setupForm(formId, successId) {
+            const form = document.getElementById(formId);
+            const successMsg = document.getElementById(successId);
+            if (!form || !successMsg) return;
+
+            form.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const formData = new FormData(form);
+
+                try {
+                    const response = await fetch(form.action, {
+                        method: 'POST',
+                        body: formData,
+                        headers: { 'Accept': 'application/json' }
+                    });
+
+                    if (response.ok) {
+                        form.style.display = 'none';
+                        successMsg.style.display = 'block';
+                    }
+                } catch (error) {
+                    form.style.display = 'none';
+                    successMsg.style.display = 'block';
+                }
+            });
+        }
+
+        setupForm('hero-waitlist-form', 'hero-success-message');
+        setupForm('waitlist-form', 'success-message');
     </script>
 
 </body>
