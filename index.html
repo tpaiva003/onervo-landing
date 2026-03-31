@@ -218,7 +218,6 @@
             line-height: 0.95;
             letter-spacing: -0.03em;
             max-width: 14ch;
-            will-change: transform;
         }
 
         .hero-title .accent {
@@ -822,27 +821,6 @@
         }, { threshold: 0.5 });
 
         document.querySelectorAll('.stat-number').forEach((el) => counterObserver.observe(el));
-
-        // Subtle parallax on hero title (scroll-speed differential)
-        const heroTitle = document.querySelector('.hero-title');
-        let ticking = false;
-
-        function onScroll() {
-            if (!ticking) {
-                requestAnimationFrame(() => {
-                    const scrollY = window.scrollY;
-                    if (scrollY < window.innerHeight) {
-                        heroTitle.style.transform = 'translateY(' + (scrollY * 0.12) + 'px)';
-                    }
-                    ticking = false;
-                });
-                ticking = true;
-            }
-        }
-
-        if (window.matchMedia('(prefers-reduced-motion: no-preference)').matches) {
-            window.addEventListener('scroll', onScroll, { passive: true });
-        }
 
         // Form submission — handles both hero and bottom CTA forms
         function setupForm(formId, successId) {
