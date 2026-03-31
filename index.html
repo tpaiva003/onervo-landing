@@ -187,26 +187,41 @@
             margin-top: 2rem;
         }
 
+        .hero-closer {
+            color: var(--text-primary);
+            font-weight: 600;
+            margin-top: 0.75rem;
+        }
+
         /* --- Hero Inline Form --- */
         .hero-form {
             margin-top: 2.5rem;
-            max-width: 480px;
+            max-width: 520px;
         }
 
         .hero-form-row {
-            display: flex;
+            display: grid;
+            grid-template-columns: 1fr auto;
             gap: 0.75rem;
         }
 
         .hero-form-row .email-input {
-            flex: 1;
+            width: 100%;
         }
 
         .hero-submit-btn {
             width: auto;
-            padding: 1rem 1.75rem;
+            padding: 1rem 2rem;
             white-space: nowrap;
             margin-top: 0;
+        }
+
+        .hero-form-hint {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.65rem;
+            letter-spacing: 0.08em;
+            color: var(--text-muted);
+            margin-top: 0.75rem;
         }
 
         /* --- Stats --- */
@@ -497,7 +512,7 @@
             }
 
             .hero-form-row {
-                flex-direction: column;
+                grid-template-columns: 1fr;
             }
 
             .hero-submit-btn {
@@ -541,7 +556,7 @@
         <nav class="nav reveal">
             <div class="logo-mark">N</div>
             <div class="nav-status">
-                <span></span>Em construcao
+                <span></span>Em construção
             </div>
         </nav>
 
@@ -556,7 +571,9 @@
                     <p class="hero-description reveal reveal-delay-3">
                         O teu orçamento vive num Excel que ninguém percebe,
                         numa versão que ninguém confirmou,
-                        com números em que ninguém confia.<br>
+                        com números em que ninguém confia.
+                    </p>
+                    <p class="hero-description hero-closer reveal reveal-delay-3">
                         Estamos a acabar com isso.
                     </p>
 
@@ -575,6 +592,7 @@
                         <div class="success-message" id="hero-success-message">
                             Estás dentro. Falamos em breve.
                         </div>
+                        <p class="hero-form-hint">Sem spam. Só o que interessa.</p>
                     </div>
                 </div>
             </div>
