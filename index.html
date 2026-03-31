@@ -85,6 +85,51 @@
         .reveal-delay-4 { transition-delay: 0.4s; }
         .reveal-delay-5 { transition-delay: 0.5s; }
 
+        /* --- Marquee Band --- */
+        .marquee-band {
+            border-top: 1px solid var(--border);
+            border-bottom: 1px solid var(--border);
+            overflow: hidden;
+            padding: 1.25rem 0;
+            position: relative;
+        }
+
+        .marquee-track {
+            display: flex;
+            width: max-content;
+            animation: marquee-scroll 25s linear infinite;
+        }
+
+        .marquee-track:hover {
+            animation-play-state: paused;
+        }
+
+        .marquee-item {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: clamp(0.85rem, 1.5vw, 1rem);
+            font-weight: 600;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+            color: var(--text-muted);
+            white-space: nowrap;
+            padding: 0 2.5rem;
+        }
+
+        .marquee-item .dot {
+            display: inline-block;
+            width: 4px;
+            height: 4px;
+            background: var(--emerald);
+            border-radius: 50%;
+            margin-right: 2.5rem;
+            vertical-align: middle;
+        }
+
+        @keyframes marquee-scroll {
+            from { transform: translateX(0); }
+            to { transform: translateX(-50%); }
+        }
+
         /* --- Layout --- */
         .page-wrapper {
             max-width: 1200px;
@@ -173,6 +218,7 @@
             line-height: 0.95;
             letter-spacing: -0.03em;
             max-width: 14ch;
+            will-change: transform;
         }
 
         .hero-title .accent {
@@ -314,6 +360,14 @@
             display: flex;
             flex-direction: column;
             gap: 0.75rem;
+            border-left: 2px solid transparent;
+            transition: border-color 0.4s var(--ease-out-expo),
+                        background 0.4s var(--ease-out-expo);
+        }
+
+        .pain-item:hover {
+            border-left-color: var(--emerald);
+            background: #0a0a0a;
         }
 
         .pain-index {
@@ -619,6 +673,24 @@
             </div>
         </section>
 
+        <!-- Marquee Band -->
+        <div class="marquee-band">
+            <div class="marquee-track">
+                <span class="marquee-item"><span class="dot"></span>Excel não é orçamento</span>
+                <span class="marquee-item"><span class="dot"></span>Copiar colar não é controlo</span>
+                <span class="marquee-item"><span class="dot"></span>3 versões não é gestão</span>
+                <span class="marquee-item"><span class="dot"></span>Rezar não é auditoria</span>
+                <span class="marquee-item"><span class="dot"></span>"Quando há tempo" é nunca</span>
+                <span class="marquee-item"><span class="dot"></span>Fingir não é confiança</span>
+                <span class="marquee-item"><span class="dot"></span>Excel não é orçamento</span>
+                <span class="marquee-item"><span class="dot"></span>Copiar colar não é controlo</span>
+                <span class="marquee-item"><span class="dot"></span>3 versões não é gestão</span>
+                <span class="marquee-item"><span class="dot"></span>Rezar não é auditoria</span>
+                <span class="marquee-item"><span class="dot"></span>"Quando há tempo" é nunca</span>
+                <span class="marquee-item"><span class="dot"></span>Fingir não é confiança</span>
+            </div>
+        </div>
+
         <!-- Pain Points — PAS: Problem-Agitate-Solution -->
         <section class="pain-section">
             <div class="pain-header">
@@ -712,6 +784,65 @@
         });
 
         document.querySelectorAll('.reveal').forEach((el) => observer.observe(el));
+
+        // Counter animation on stat numbers
+        function animateCounter(el) {
+            const text = el.textContent.trim();
+            const match = text.match(/^([\d.]+)(.*)$/);
+            if (!match) return;
+
+            const target = parseFloat(match[1]);
+            const suffix = match[2];
+            const duration = 1800;
+            const start = performance.now();
+            const isDecimal = match[1].includes('.');
+
+            function tick(now) {
+                const elapsed = now - start;
+                const progress = Math.min(elapsed / duration, 1);
+                const eased = 1 - Math.pow(1 - progress, 4);
+                const current = eased * target;
+
+                el.textContent = (isDecimal ? current.toFixed(1) : Math.floor(current)) + suffix;
+
+                if (progress < 1) requestAnimationFrame(tick);
+            }
+
+            el.textContent = '0' + suffix;
+            requestAnimationFrame(tick);
+        }
+
+        const counterObserver = new IntersectionObserver((entries) => {
+            entries.forEach((entry) => {
+                if (entry.isIntersecting) {
+                    animateCounter(entry.target);
+                    counterObserver.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.5 });
+
+        document.querySelectorAll('.stat-number').forEach((el) => counterObserver.observe(el));
+
+        // Subtle parallax on hero title (scroll-speed differential)
+        const heroTitle = document.querySelector('.hero-title');
+        let ticking = false;
+
+        function onScroll() {
+            if (!ticking) {
+                requestAnimationFrame(() => {
+                    const scrollY = window.scrollY;
+                    if (scrollY < window.innerHeight) {
+                        heroTitle.style.transform = 'translateY(' + (scrollY * 0.12) + 'px)';
+                    }
+                    ticking = false;
+                });
+                ticking = true;
+            }
+        }
+
+        if (window.matchMedia('(prefers-reduced-motion: no-preference)').matches) {
+            window.addEventListener('scroll', onScroll, { passive: true });
+        }
 
         // Form submission — handles both hero and bottom CTA forms
         function setupForm(formId, successId) {
