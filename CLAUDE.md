@@ -1,11 +1,14 @@
 # O Nervo — Landing Page
 
 ## Projeto
-Landing page de teaser/waitlist para **O Nervo** — plataforma SaaS de controlo orcamental para PMEs portuguesas. Repositorio separado do produto principal (budget-tracker-simple).
+Landing page comercial do **O Nervo** — plataforma SaaS de controlo orcamental para PMEs portuguesas. Repositorio separado do produto principal (`tpaiva003/onervo`, servido em `app.onervo.pt`).
+
+**Funil:** todos os CTAs levam para a app: `https://app.onervo.pt/auth?tab=signup` (registo, 14 dias gratis), `https://app.onervo.pt/auth` (entrar) e `https://app.onervo.pt/pricing` / seccao `#precos` (precos). A lista de espera (Formspree) foi retirada em 2026-11-25.
 
 - **URL:** onervo.pt
 - **Hosting:** Vercel (projeto separado, HTML estatico)
-- **Form backend:** Formspree (https://formspree.io/f/xnjodeda)
+- **App (registo, login, subscricao):** https://app.onervo.pt
+- **Precos:** tem de coincidir com `src/lib/billing/prices.ts` no repo da app (Starter 29,99 €/mes ou 295 €/ano; Pro 79 €/mes ou 780 €/ano)
 - **Stack:** HTML5 puro + CSS embebido + JS vanilla. Sem framework, sem build.
 
 ---

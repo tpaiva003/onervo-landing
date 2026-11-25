@@ -46,3 +46,16 @@
 - Logo profissional (atualmente placeholder "N")
 - Conteudo semana 2+ para redes sociais
 - Melhorias continuas na landing page baseadas em feedback
+
+## Sessao 2 — 2026-11-25
+
+### O que foi feito
+- Landing passou de waitlist para pagina comercial: todos os CTAs levam para `app.onervo.pt` (registo, login, precos).
+- Redesign completo: nav fixa com Entrar / Comecar gratis, hero com ilustracao animada do painel (marcada "valores de exemplo"), "Como funciona" em 3 passos, grelha de funcionalidades, calculadora interativa "Quanto te custa o Excel?" (so com valores do visitante), precos reais com alternancia mensal/anual, FAQ, CTA final e CTA fixo no telemovel.
+- SEO: title/description novos, canonical, Open Graph, JSON-LD SoftwareApplication com ofertas, robots.txt e sitemap.xml.
+- Removidas estatisticas sem fonte (86%, 400h, "50+ equipas").
+- Acessibilidade: conteudo visivel sem JS, prefers-reduced-motion respeitado, focus visivel.
+
+### Pendente
+- Imagem Open Graph (1200x630) para partilhas em LinkedIn/WhatsApp.
+- Logo profissional.
