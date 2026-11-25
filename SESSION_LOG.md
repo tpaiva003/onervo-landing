@@ -59,3 +59,10 @@
 ### Pendente
 - Imagem Open Graph (1200x630) para partilhas em LinkedIn/WhatsApp.
 - Logo profissional.
+
+## Sessao 3 — 2026-11-25
+
+- Favicon definitivo a partir do simbolo "N" (Space Grotesk Bold, barra emerald/gold 70/30): favicon.ico (16/32/48), favicon.svg, apple-touch-icon.png, icon-192/512, icon-maskable-512, site.webmanifest. O mesmo conjunto foi aplicado na app (app.onervo.pt), que ainda tinha o favicon do Lovable.
+- Imagem de partilha og-image.png (1200x630) com og:image / twitter:image (summary_large_image) para LinkedIn, WhatsApp, etc.
+- JSON-LD Organization com logo para o Google; nav e rodape usam o novo simbolo.
+- Google Search Console verificado (ficheiro HTML) + registo TXT no DNS da dominios.pt.
