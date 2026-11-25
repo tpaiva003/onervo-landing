@@ -1,858 +1,779 @@
 <!DOCTYPE html>
-<html lang="pt">
+<html lang="pt-PT">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>O Nervo — Toca no nervo do teu orcamento</title>
-    <meta name="description" content="86% das PMEs gerem orçamentos em Excel. Sem versão única, sem auditoria, sem confiança. Estamos a acabar com isso.">
-    <meta property="og:title" content="O Nervo — Toca no nervo do teu orçamento">
-    <meta property="og:description" content="86% das PMEs gerem orçamentos em Excel. Sem versão única, sem auditoria, sem confiança. Estamos a acabar com isso.">
+    <title>O Nervo — Orçamento e controlo de gestão para PME</title>
+    <meta name="description" content="Importa o Excel ou o SAF-T, cria o orçamento e vê os desvios mês a mês. Multiempresa, IA e relatório de gestão. 14 dias grátis, sem cartão.">
+    <link rel="canonical" href="https://onervo.pt/">
+    <meta name="theme-color" content="#050505">
+
     <meta property="og:type" content="website">
+    <meta property="og:locale" content="pt_PT">
+    <meta property="og:site_name" content="O Nervo">
+    <meta property="og:url" content="https://onervo.pt/">
+    <meta property="og:title" content="O Nervo — Toca no nervo do teu orçamento">
+    <meta property="og:description" content="Do Excel à decisão: orçamento, desvios e IA para PME portuguesas. 14 dias grátis, sem cartão.">
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="O Nervo — Toca no nervo do teu orçamento">
+    <meta name="twitter:description" content="Do Excel à decisão: orçamento, desvios e IA para PME portuguesas.">
+
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='4' fill='%23050505'/%3E%3Ctext x='16' y='23' text-anchor='middle' font-family='system-ui,-apple-system,sans-serif' font-weight='700' font-size='22' fill='%23f0f0f0'%3EN%3C/text%3E%3C/svg%3E">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "SoftwareApplication",
+        "name": "O Nervo",
+        "url": "https://onervo.pt/",
+        "applicationCategory": "BusinessApplication",
+        "operatingSystem": "Web",
+        "inLanguage": "pt-PT",
+        "description": "Orçamento, análise de desvios e IA para PME portuguesas. Importa Excel e SAF-T, multiempresa e relatório de gestão.",
+        "offers": [
+            { "@type": "Offer", "name": "Starter", "price": "29.99", "priceCurrency": "EUR", "url": "https://app.onervo.pt/pricing" },
+            { "@type": "Offer", "name": "Pro", "price": "79.00", "priceCurrency": "EUR", "url": "https://app.onervo.pt/pricing" }
+        ]
+    }
+    </script>
+
+    <script>document.documentElement.classList.add('js');</script>
+
     <style>
-        *,
-        *::before,
-        *::after {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 
         :root {
             --bg: #050505;
             --surface: #0e0e0e;
-            --border: rgba(255, 255, 255, 0.06);
+            --surface-2: #141414;
+            --border: rgba(255, 255, 255, 0.07);
+            --border-strong: rgba(255, 255, 255, 0.14);
             --text-primary: #f0f0f0;
-            --text-secondary: #8a8a8a;
-            --text-muted: #555555;
+            --text-secondary: #9a9a9a;
+            --text-muted: #6a6a6a;
             --emerald: #036016;
-            --emerald-light: #047a1c;
+            --emerald-light: #058a22;
+            --emerald-text: #2fb24f;
+            --emerald-glow: rgba(5, 138, 34, 0.35);
             --gold: #ECD444;
-            --gold-muted: #d4be3b;
+            --red: #f06a6e;
+            --radius: 1rem;
             --radius-lg: 1.5rem;
-            --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+            --ease: cubic-bezier(0.16, 1, 0.3, 1);
+            --mono: 'JetBrains Mono', ui-monospace, monospace;
         }
 
-        html {
-            scroll-behavior: smooth;
-            -webkit-font-smoothing: antialiased;
-            -moz-osx-font-smoothing: grayscale;
-        }
-
+        html { scroll-behavior: smooth; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
         body {
-            font-family: 'Space Grotesk', sans-serif;
-            background-color: var(--bg);
-            color: var(--text-primary);
-            min-height: 100dvh;
-            overflow-x: hidden;
-            line-height: 1.6;
-        }
-
-        /* --- Noise Overlay --- */
-        body::before {
-            content: '';
-            position: fixed;
-            inset: 0;
-            z-index: 50;
-            pointer-events: none;
-            opacity: 0.025;
-            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
-            background-repeat: repeat;
-            background-size: 256px 256px;
-        }
-
-        /* --- Scroll Reveal --- */
-        .reveal {
-            opacity: 0;
-            transform: translateY(2.5rem);
-            filter: blur(4px);
-            transition: opacity 0.9s var(--ease-out-expo),
-                        transform 0.9s var(--ease-out-expo),
-                        filter 0.9s var(--ease-out-expo);
-        }
-
-        .reveal.visible {
-            opacity: 1;
-            transform: translateY(0);
-            filter: blur(0);
-        }
-
-        .reveal-delay-1 { transition-delay: 0.1s; }
-        .reveal-delay-2 { transition-delay: 0.2s; }
-        .reveal-delay-3 { transition-delay: 0.3s; }
-        .reveal-delay-4 { transition-delay: 0.4s; }
-        .reveal-delay-5 { transition-delay: 0.5s; }
-
-        /* --- Marquee Band --- */
-        .marquee-band {
-            border-top: 1px solid var(--border);
-            border-bottom: 1px solid var(--border);
-            overflow: hidden;
-            padding: 1.25rem 0;
-            position: relative;
-        }
-
-        .marquee-track {
-            display: flex;
-            width: max-content;
-            animation: marquee-scroll 25s linear infinite;
-        }
-
-        .marquee-track:hover {
-            animation-play-state: paused;
-        }
-
-        .marquee-item {
-            font-family: 'Space Grotesk', sans-serif;
-            font-size: clamp(0.85rem, 1.5vw, 1rem);
-            font-weight: 600;
-            letter-spacing: 0.05em;
-            text-transform: uppercase;
-            color: var(--text-muted);
-            white-space: nowrap;
-            padding: 0 2.5rem;
-        }
-
-        .marquee-item .dot {
-            display: inline-block;
-            width: 4px;
-            height: 4px;
-            background: var(--emerald);
-            border-radius: 50%;
-            margin-right: 2.5rem;
-            vertical-align: middle;
-        }
-
-        @keyframes marquee-scroll {
-            from { transform: translateX(0); }
-            to { transform: translateX(-50%); }
-        }
-
-        /* --- Layout --- */
-        .page-wrapper {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 clamp(1.5rem, 5vw, 4rem);
-        }
-
-        section {
-            padding: clamp(4rem, 10vw, 8rem) 0;
-        }
-
-        /* --- Navigation / Logo Bar --- */
-        .nav {
-            padding: 2rem 0;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-        }
-
-        .logo-mark {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            width: 52px;
-            height: 52px;
+            font-family: 'Space Grotesk', system-ui, sans-serif;
             background: var(--bg);
             color: var(--text-primary);
-            border: 1px solid rgba(255, 255, 255, 0.12);
-            font-size: 28px;
-            font-weight: 700;
-            letter-spacing: -1px;
-            transition: transform 0.5s var(--ease-out-expo);
+            line-height: 1.6;
+            overflow-x: hidden;
         }
+        body::before {
+            content: ''; position: fixed; inset: 0; z-index: 100; pointer-events: none; opacity: 0.025;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+            background-size: 256px;
+        }
+        a { color: inherit; text-decoration: none; }
+        :focus-visible { outline: 2px solid var(--gold); outline-offset: 3px; border-radius: 6px; }
+        .wrap { max-width: 1200px; margin: 0 auto; padding: 0 clamp(1rem, 5vw, 4rem); }
+        section { padding: clamp(4.5rem, 10vw, 8rem) 0; }
+        .gold { color: var(--gold); }
+        .eyebrow {
+            font-family: var(--mono); font-size: 0.75rem; letter-spacing: 0.14em; text-transform: uppercase;
+            color: var(--emerald-text); display: inline-flex; align-items: center; gap: 0.6rem;
+        }
+        .eyebrow::before { content: ''; width: 18px; height: 1px; background: currentColor; }
+        h1, h2, h3 { letter-spacing: -0.03em; line-height: 1.05; }
+        h2 { font-size: clamp(2rem, 5vw, 3.4rem); font-weight: 700; margin-top: 1rem; }
+        .lead { color: var(--text-secondary); font-size: clamp(1rem, 1.6vw, 1.15rem); max-width: 36rem; }
+        .inline-link { color: var(--text-primary); text-decoration: underline; text-underline-offset: 3px; }
 
-        .logo-mark:hover {
-            transform: scale(0.96);
-        }
+        /* --- Reveal (only hides content when JS runs) --- */
+        .js .reveal { opacity: 0; transform: translateY(2rem); filter: blur(4px);
+            transition: opacity .9s var(--ease), transform .9s var(--ease), filter .9s var(--ease); }
+        .js .reveal.visible { opacity: 1; transform: none; filter: none; }
+        .d1 { transition-delay: .08s !important; } .d2 { transition-delay: .16s !important; }
+        .d3 { transition-delay: .24s !important; } .d4 { transition-delay: .32s !important; }
 
-        .nav-status {
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 0.7rem;
-            letter-spacing: 0.12em;
-            text-transform: uppercase;
-            color: var(--text-muted);
+        /* --- Buttons --- */
+        .btn {
+            display: inline-flex; align-items: center; justify-content: center; gap: .5rem;
+            font: 600 0.95rem 'Space Grotesk', sans-serif; letter-spacing: -0.01em;
+            padding: .85rem 1.4rem; border-radius: 999px; border: 1px solid transparent; cursor: pointer;
+            transition: transform .3s var(--ease), background .3s, box-shadow .3s, border-color .3s;
+            white-space: nowrap;
         }
+        .btn:active { transform: scale(.97); }
+        .btn-primary { background: var(--emerald); color: #fff; box-shadow: 0 0 0 1px rgba(255,255,255,.08) inset, 0 10px 40px -10px var(--emerald-glow); }
+        .btn-primary:hover { background: var(--emerald-light); box-shadow: 0 0 0 1px rgba(255,255,255,.12) inset, 0 14px 50px -8px var(--emerald-glow); transform: translateY(-1px); }
+        .btn-ghost { border-color: var(--border-strong); color: var(--text-primary); background: rgba(255,255,255,.02); }
+        .btn-ghost:hover { border-color: rgba(255,255,255,.3); background: rgba(255,255,255,.05); }
+        .btn-lg { padding: 1.05rem 1.8rem; font-size: 1.02rem; }
+        .btn .arrow { transition: transform .3s var(--ease); }
+        .btn:hover .arrow { transform: translateX(3px); }
 
-        .nav-status span {
-            display: inline-block;
-            width: 6px;
-            height: 6px;
-            background: var(--emerald);
-            border-radius: 50%;
-            margin-right: 8px;
-            animation: pulse-dot 2.5s ease-in-out infinite;
+        /* --- Nav --- */
+        .nav {
+            position: sticky; top: 0; z-index: 50;
+            background: rgba(5,5,5,.72); backdrop-filter: blur(14px) saturate(140%); -webkit-backdrop-filter: blur(14px) saturate(140%);
+            border-bottom: 1px solid transparent; transition: border-color .3s;
         }
-
-        @keyframes pulse-dot {
-            0%, 100% { opacity: 1; transform: scale(1); }
-            50% { opacity: 0.4; transform: scale(0.8); }
+        .nav.scrolled { border-bottom-color: var(--border); }
+        .nav-inner { display: flex; align-items: center; justify-content: space-between; height: 68px; gap: 1rem; }
+        .brand { display: flex; align-items: center; gap: .7rem; font-weight: 700; letter-spacing: -0.02em; }
+        .logo-mark {
+            width: 34px; height: 34px; border-radius: 8px; display: grid; place-items: center;
+            background: var(--bg); border: 1px solid var(--border-strong); font-weight: 700; font-size: 1.15rem;
         }
+        .nav-links { display: flex; gap: 2rem; font-size: .92rem; color: var(--text-secondary); }
+        .nav-links a:hover { color: var(--text-primary); }
+        .nav-cta { display: flex; gap: .5rem; align-items: center; }
+        .nav-cta .btn { padding: .6rem 1.1rem; font-size: .88rem; }
+        @media (max-width: 900px) { .nav-links { display: none; } }
+        @media (max-width: 400px) { .brand-name { display: none; } }
 
         /* --- Hero --- */
-        .hero {
-            padding-top: clamp(3rem, 8vw, 6rem);
-            padding-bottom: clamp(4rem, 10vw, 8rem);
+        .hero { padding-top: clamp(3rem, 8vw, 6rem); position: relative; overflow: hidden; }
+        .hero::after {
+            content: ''; position: absolute; z-index: -1; pointer-events: none;
+            width: 900px; height: 900px; right: -300px; top: -250px;
+            background: radial-gradient(closest-side, rgba(3,96,22,.28), transparent 70%);
         }
+        .hero-grid { display: grid; grid-template-columns: 1.05fr 1fr; gap: clamp(2rem, 5vw, 4.5rem); align-items: center; }
+        @media (max-width: 960px) { .hero-grid { grid-template-columns: 1fr; } }
+        .hero h1 { font-size: clamp(2.6rem, 6vw, 4.6rem); font-weight: 700; margin: 1.25rem 0 1.5rem; }
+        .hero h1 .accent { color: var(--gold); }
+        .hero-actions { display: flex; flex-wrap: wrap; gap: .75rem; margin-top: 2rem; }
+        .hero-trust { display: flex; flex-wrap: wrap; gap: .5rem 1.25rem; margin-top: 1.5rem; font-family: var(--mono); font-size: .74rem; color: var(--text-muted); letter-spacing: .02em; }
+        .hero-trust span::before { content: '✓'; color: var(--emerald-text); margin-right: .45rem; }
 
-        .hero-grid {
-            display: grid;
-            grid-template-columns: 1fr;
-            gap: 3rem;
+        /* --- Product preview (illustrative) --- */
+        .preview-shell { padding: .5rem; border-radius: calc(var(--radius-lg) + .5rem); background: linear-gradient(160deg, rgba(255,255,255,.08), rgba(255,255,255,.01)); border: 1px solid var(--border); }
+        .preview {
+            border-radius: var(--radius-lg); background: var(--surface); border: 1px solid var(--border);
+            padding: 1.25rem; box-shadow: 0 40px 120px -40px rgba(3,96,22,.45); overflow: hidden;
         }
+        .preview-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.1rem; gap: .75rem; }
+        .dots { display: flex; gap: 6px; } .dots i { width: 9px; height: 9px; border-radius: 50%; background: #2a2a2a; display: block; }
+        .tag { font-family: var(--mono); font-size: .65rem; letter-spacing: .08em; text-transform: uppercase; color: var(--text-muted); border: 1px solid var(--border); padding: .2rem .55rem; border-radius: 999px; }
+        .kpis { display: grid; grid-template-columns: repeat(3, 1fr); gap: .6rem; margin-bottom: 1rem; }
+        .kpi { background: var(--surface-2); border: 1px solid var(--border); border-radius: .75rem; padding: .75rem; }
+        .kpi small { font-family: var(--mono); font-size: .62rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: .06em; display: block; }
+        .kpi b { font-family: var(--mono); font-size: clamp(.9rem, 1.6vw, 1.1rem); font-weight: 500; display: block; margin-top: .15rem; }
+        .kpi .up { color: var(--emerald-text); } .kpi .down { color: var(--red); }
+        .chart { display: grid; grid-template-columns: repeat(6, 1fr); gap: .6rem; align-items: end; height: 150px; padding: .75rem .25rem 0; border-top: 1px dashed var(--border); }
+        .bar-pair { display: flex; gap: 3px; align-items: end; height: 100%; }
+        .bar-pair i { flex: 1; display: block; border-radius: 4px 4px 0 0; transform-origin: bottom; }
+        .bar-pair .b { background: #2b2b2b; }
+        .bar-pair .r { background: var(--emerald-light); }
+        .bar-pair .r.over { background: var(--gold); }
+        .js .chart i { transform: scaleY(0); transition: transform 1.1s var(--ease); }
+        .js .chart.grown i { transform: scaleY(1); }
+        .chart-labels { display: grid; grid-template-columns: repeat(6, 1fr); gap: .6rem; font-family: var(--mono); font-size: .62rem; color: var(--text-muted); text-align: center; margin-top: .4rem; }
+        .legend { display: flex; flex-wrap: wrap; gap: .4rem 1rem; font-family: var(--mono); font-size: .62rem; color: var(--text-muted); margin-top: .75rem; }
+        .legend span::before { content: ''; display: inline-block; width: 8px; height: 8px; border-radius: 2px; margin-right: .35rem; vertical-align: middle; }
+        .legend .lb::before { background: #2b2b2b; } .legend .lr::before { background: var(--emerald-light); } .legend .lo::before { background: var(--gold); }
+        .ask { margin-top: 1rem; background: var(--surface-2); border: 1px solid var(--border); border-radius: .9rem; padding: .85rem 1rem; font-size: .85rem; }
+        .ask .q { font-family: var(--mono); font-size: .72rem; color: var(--text-muted); margin-bottom: .35rem; }
+        .ask .a { color: var(--text-secondary); min-height: 4.2em; }
+        .ask .a::after { content: '▍'; color: var(--emerald-text); animation: blink 1s steps(1) infinite; }
+        .ask .a.done::after { content: ''; }
+        @keyframes blink { 50% { opacity: 0; } }
+        .preview-note { font-family: var(--mono); font-size: .66rem; color: var(--text-muted); margin-top: .75rem; text-align: right; }
 
-        .hero-eyebrow {
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 0.7rem;
-            letter-spacing: 0.15em;
-            text-transform: uppercase;
-            color: var(--gold-muted);
-            margin-bottom: 1.5rem;
-        }
+        /* --- Marquee --- */
+        .marquee { border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); overflow: hidden; padding: 1.2rem 0; }
+        .marquee-track { display: flex; width: max-content; animation: marquee 32s linear infinite; }
+        .marquee:hover .marquee-track { animation-play-state: paused; }
+        .marquee-item { font-weight: 600; font-size: clamp(.85rem, 1.5vw, 1rem); letter-spacing: .05em; text-transform: uppercase; color: var(--text-muted); white-space: nowrap; padding: 0 2.2rem; }
+        .marquee-item::before { content: ''; display: inline-block; width: 5px; height: 5px; border-radius: 50%; background: var(--emerald-light); margin-right: 2.2rem; vertical-align: middle; }
+        @keyframes marquee { to { transform: translateX(-50%); } }
 
-        .hero-title {
-            font-size: clamp(2.8rem, 7vw, 5.5rem);
-            font-weight: 700;
-            line-height: 0.95;
-            letter-spacing: -0.03em;
-            max-width: 14ch;
-        }
+        /* --- Pain --- */
+        .split { display: grid; grid-template-columns: 1fr 1.25fr; gap: clamp(2rem, 6vw, 6rem); }
+        @media (max-width: 860px) { .split { grid-template-columns: 1fr; } }
+        .pain-list { border-top: 1px solid var(--border); }
+        .pain-item { display: grid; grid-template-columns: 3rem 1fr; gap: 1rem; padding: 1.5rem 0; border-bottom: 1px solid var(--border); transition: padding .4s var(--ease); }
+        .pain-item:hover { padding-left: .5rem; }
+        .pain-item .idx { font-family: var(--mono); font-size: .8rem; color: var(--gold); padding-top: .2rem; }
+        .pain-item p { color: var(--text-secondary); font-size: 1.05rem; }
+        .pain-item strong { color: var(--text-primary); font-weight: 600; }
 
-        .hero-title .accent {
-            color: var(--gold);
-        }
+        /* --- Steps --- */
+        .section-head { display: flex; justify-content: space-between; align-items: end; gap: 2rem; flex-wrap: wrap; margin-bottom: clamp(2.5rem, 5vw, 4rem); }
+        .steps { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; counter-reset: s; }
+        @media (max-width: 860px) { .steps { grid-template-columns: 1fr; } }
+        .step { position: relative; padding: 2rem 1.6rem; border-radius: var(--radius-lg); background: var(--surface); border: 1px solid var(--border); overflow: hidden; }
+        .step::before { counter-increment: s; content: '0' counter(s); font-family: var(--mono); font-size: 4.5rem; font-weight: 700; line-height: 1; color: rgba(255,255,255,.035); position: absolute; right: 1rem; top: .8rem; }
+        .step .k { font-family: var(--mono); font-size: .72rem; letter-spacing: .1em; text-transform: uppercase; color: var(--emerald-text); }
+        .step h3 { font-size: 1.5rem; margin: .7rem 0 .6rem; }
+        .step p { color: var(--text-secondary); font-size: .96rem; }
+        .chips { display: flex; flex-wrap: wrap; gap: .4rem; margin-top: 1.2rem; }
+        .chip { font-family: var(--mono); font-size: .68rem; padding: .25rem .6rem; border-radius: 999px; border: 1px solid var(--border-strong); color: var(--text-secondary); }
 
-        .hero-description {
-            font-size: clamp(1.05rem, 1.8vw, 1.25rem);
-            color: var(--text-secondary);
-            line-height: 1.7;
-            max-width: 52ch;
-            margin-top: 2rem;
-        }
+        /* --- Bento features --- */
+        .bento { display: grid; grid-template-columns: repeat(6, 1fr); gap: 1rem; }
+        .card { grid-column: span 2; padding: 1.75rem; border-radius: var(--radius-lg); background: var(--surface); border: 1px solid var(--border); position: relative; overflow: hidden; transition: border-color .4s, transform .4s var(--ease); }
+        .card:hover { border-color: var(--border-strong); transform: translateY(-3px); }
+        .card.wide { grid-column: span 3; }
+        .card.hl { background: radial-gradient(120% 120% at 0% 0%, rgba(3,96,22,.35), var(--surface) 60%); border-color: rgba(5,138,34,.35); }
+        @media (max-width: 960px) { .card, .card.wide { grid-column: span 3; } }
+        @media (max-width: 640px) { .bento { grid-template-columns: 1fr; } .card, .card.wide { grid-column: span 1; } }
+        .card .ic { width: 40px; height: 40px; border-radius: 10px; display: grid; place-items: center; background: rgba(255,255,255,.04); border: 1px solid var(--border); margin-bottom: 1.2rem; color: var(--gold); }
+        .card h3 { font-size: 1.2rem; margin-bottom: .5rem; letter-spacing: -0.02em; }
+        .card p { color: var(--text-secondary); font-size: .94rem; }
 
-        .hero-closer {
-            color: var(--text-primary);
-            font-weight: 600;
-            margin-top: 0.75rem;
-        }
+        /* --- Calculator --- */
+        .calc { display: grid; grid-template-columns: 1.1fr 1fr; border-radius: calc(var(--radius-lg) + .5rem); padding: .5rem; background: linear-gradient(160deg, rgba(255,255,255,.07), rgba(255,255,255,.01)); border: 1px solid var(--border); }
+        @media (max-width: 860px) { .calc { grid-template-columns: 1fr; } }
+        .calc-in, .calc-out { padding: clamp(1.5rem, 4vw, 2.5rem); }
+        .calc-in { background: var(--surface); border-radius: var(--radius-lg) 0 0 var(--radius-lg); }
+        .calc-out { background: radial-gradient(120% 100% at 100% 0%, rgba(3,96,22,.4), #0a0a0a 70%); border-radius: 0 var(--radius-lg) var(--radius-lg) 0; display: flex; flex-direction: column; justify-content: center; }
+        @media (max-width: 860px) { .calc-in { border-radius: var(--radius-lg) var(--radius-lg) 0 0; } .calc-out { border-radius: 0 0 var(--radius-lg) var(--radius-lg); } }
+        .field { margin-top: 1.6rem; }
+        .field:first-child { margin-top: 0; }
+        .field-top { display: flex; justify-content: space-between; align-items: baseline; gap: 1rem; margin-bottom: .6rem; }
+        .field label { color: var(--text-secondary); font-size: .95rem; }
+        .field output { font-family: var(--mono); font-size: 1.05rem; color: var(--text-primary); }
+        input[type=range] { -webkit-appearance: none; appearance: none; width: 100%; height: 6px; border-radius: 999px; background: linear-gradient(90deg, var(--emerald-light) var(--p, 50%), #262626 var(--p, 50%)); cursor: pointer; }
+        input[type=range]::-webkit-slider-thumb { -webkit-appearance: none; width: 22px; height: 22px; border-radius: 50%; background: #f0f0f0; border: 4px solid var(--emerald); box-shadow: 0 2px 10px rgba(0,0,0,.6); }
+        input[type=range]::-moz-range-thumb { width: 16px; height: 16px; border-radius: 50%; background: #f0f0f0; border: 4px solid var(--emerald); }
+        .big-number { font-family: var(--mono); font-size: clamp(2.4rem, 6vw, 4.2rem); font-weight: 700; color: var(--gold); letter-spacing: -0.04em; line-height: 1; margin: .8rem 0 .5rem; }
+        .calc-out .sub { color: var(--text-secondary); font-size: .95rem; }
+        .calc-out .compare { margin-top: 1.6rem; padding-top: 1.4rem; border-top: 1px solid var(--border); font-size: .95rem; color: var(--text-secondary); }
+        .calc-out .compare b { color: var(--text-primary); font-family: var(--mono); font-weight: 500; }
+        .calc-out .btn { margin-top: 1.6rem; align-self: flex-start; }
+        .calc-note { font-family: var(--mono); font-size: .68rem; color: var(--text-muted); margin-top: 1.6rem; }
 
-        /* --- Hero Inline Form --- */
-        .hero-form {
-            margin-top: 2.5rem;
-            max-width: 520px;
-        }
+        /* --- Pricing --- */
+        .toggle { display: inline-flex; padding: .3rem; border-radius: 999px; background: var(--surface); border: 1px solid var(--border); gap: .2rem; }
+        .toggle button { font: 500 .9rem 'Space Grotesk', sans-serif; color: var(--text-secondary); background: none; border: 0; padding: .55rem 1.2rem; border-radius: 999px; cursor: pointer; transition: background .3s, color .3s; }
+        .toggle button[aria-pressed="true"] { background: var(--emerald); color: #fff; }
+        .toggle .save { font-family: var(--mono); font-size: .65rem; color: var(--gold); margin-left: .35rem; }
+        .toggle button[aria-pressed="true"] .save { color: #fff; opacity: .85; }
+        .plans { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; align-items: stretch; }
+        @media (max-width: 960px) { .plans { grid-template-columns: 1fr; max-width: 520px; } }
+        .plan { display: flex; flex-direction: column; padding: 2rem 1.75rem; border-radius: var(--radius-lg); background: var(--surface); border: 1px solid var(--border); position: relative; }
+        .plan.hl { border-color: rgba(5,138,34,.55); background: radial-gradient(140% 90% at 50% 0%, rgba(3,96,22,.32), var(--surface) 65%); box-shadow: 0 30px 90px -40px var(--emerald-glow); }
+        .badge { position: absolute; top: -12px; left: 1.75rem; font-family: var(--mono); font-size: .66rem; letter-spacing: .08em; text-transform: uppercase; background: var(--gold); color: #111; padding: .3rem .7rem; border-radius: 999px; font-weight: 700; }
+        .plan h3 { font-size: 1.35rem; }
+        .plan .desc { color: var(--text-secondary); font-size: .92rem; margin-top: .3rem; min-height: 2.9em; }
+        .price { margin: 1.4rem 0 .2rem; display: flex; align-items: baseline; gap: .35rem; }
+        .price b { font-family: var(--mono); font-size: 2.6rem; font-weight: 700; letter-spacing: -0.04em; }
+        .price b.custom { font-size: 2rem; }
+        .price span { color: var(--text-muted); font-size: .9rem; }
+        .billed { font-family: var(--mono); font-size: .72rem; color: var(--text-muted); min-height: 1.2em; }
+        .plan ul { list-style: none; margin: 1.5rem 0 2rem; display: grid; gap: .7rem; flex: 1; align-content: start; }
+        .plan li { display: grid; grid-template-columns: 1.2rem 1fr; gap: .6rem; font-size: .93rem; color: var(--text-secondary); }
+        .plan li::before { content: '✓'; color: var(--emerald-text); font-weight: 700; }
+        .plan .btn { width: 100%; }
+        .pricing-note { text-align: center; color: var(--text-muted); font-size: .9rem; margin-top: 2rem; }
 
-        .hero-form-row {
-            display: grid;
-            grid-template-columns: 1fr auto;
-            gap: 0.75rem;
-        }
+        /* --- FAQ --- */
+        .faq { display: grid; gap: .75rem; align-content: start; }
+        .faq details { border-radius: var(--radius); background: var(--surface); border: 1px solid var(--border); padding: 0 1.4rem; transition: border-color .3s; }
+        .faq details[open] { border-color: var(--border-strong); }
+        .faq summary { list-style: none; cursor: pointer; padding: 1.25rem 0; font-weight: 600; display: flex; justify-content: space-between; gap: 1rem; align-items: center; }
+        .faq summary::-webkit-details-marker { display: none; }
+        .faq summary::after { content: '+'; font-family: var(--mono); color: var(--gold); font-size: 1.2rem; transition: transform .3s var(--ease); }
+        .faq details[open] summary::after { transform: rotate(45deg); }
+        .faq details p { color: var(--text-secondary); padding-bottom: 1.25rem; max-width: 46rem; }
 
-        .hero-form-row .email-input {
-            width: 100%;
-        }
-
-        .hero-submit-btn {
-            width: auto;
-            padding: 1rem 2rem;
-            white-space: nowrap;
-            margin-top: 0;
-        }
-
-        .hero-form-hint {
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 0.65rem;
-            letter-spacing: 0.08em;
-            color: var(--text-muted);
-            margin-top: 0.75rem;
-        }
-
-        /* --- Stats --- */
-        .stats-section {
-            border-top: 1px solid var(--border);
-        }
-
-        .stats-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr 1fr;
-            gap: 1px;
-            background: var(--border);
-        }
-
-        .stat-cell {
-            background: var(--bg);
-            padding: clamp(2rem, 4vw, 3.5rem) clamp(1.5rem, 3vw, 2.5rem);
-        }
-
-        .stat-number {
-            font-family: 'JetBrains Mono', monospace;
-            font-size: clamp(2rem, 4vw, 3.2rem);
-            font-weight: 500;
-            color: var(--gold);
-            letter-spacing: -0.02em;
-            line-height: 1;
-        }
-
-        .stat-label {
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 0.65rem;
-            letter-spacing: 0.12em;
-            text-transform: uppercase;
-            color: var(--text-muted);
-            margin-top: 0.75rem;
-        }
-
-        .stat-description {
-            font-size: 0.9rem;
-            color: var(--text-secondary);
-            margin-top: 0.5rem;
-            line-height: 1.5;
-        }
-
-        /* --- Pain Points --- */
-        .pain-section {
-            border-top: 1px solid var(--border);
-        }
-
-        .pain-header {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 3rem;
-            align-items: end;
-            margin-bottom: clamp(2.5rem, 5vw, 4rem);
-        }
-
-        .pain-label {
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 0.7rem;
-            letter-spacing: 0.15em;
-            text-transform: uppercase;
-            color: var(--text-muted);
-        }
-
-        .pain-title {
-            font-size: clamp(1.6rem, 3vw, 2.4rem);
-            font-weight: 700;
-            letter-spacing: -0.02em;
-            line-height: 1.1;
-        }
-
-        .pain-subtitle {
-            font-size: 0.95rem;
-            color: var(--text-secondary);
-            line-height: 1.6;
-            max-width: 40ch;
-        }
-
-        .pain-list {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 1px;
-            background: var(--border);
-        }
-
-        .pain-item {
-            background: var(--bg);
-            padding: clamp(1.5rem, 3vw, 2.5rem);
-            display: flex;
-            flex-direction: column;
-            gap: 0.75rem;
-            border-left: 2px solid transparent;
-            transition: border-color 0.4s var(--ease-out-expo),
-                        background 0.4s var(--ease-out-expo);
-        }
-
-        .pain-item:hover {
-            border-left-color: var(--emerald);
-            background: #0a0a0a;
-        }
-
-        .pain-index {
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 0.65rem;
-            letter-spacing: 0.1em;
-            color: var(--text-muted);
-        }
-
-        .pain-text {
-            font-size: clamp(0.95rem, 1.5vw, 1.1rem);
-            color: var(--text-secondary);
-            line-height: 1.5;
-        }
-
-        .pain-text strong {
-            color: var(--text-primary);
-            font-weight: 600;
-        }
-
-        /* --- CTA Section --- */
-        .cta-section {
-            border-top: 1px solid var(--border);
-        }
-
-        .cta-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: clamp(2rem, 5vw, 4rem);
-            align-items: center;
-        }
-
-        .cta-content {}
-
-        .cta-eyebrow {
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 0.7rem;
-            letter-spacing: 0.15em;
-            text-transform: uppercase;
-            color: var(--emerald-light);
-            margin-bottom: 1.25rem;
-        }
-
-        .cta-title {
-            font-size: clamp(1.8rem, 3.5vw, 2.8rem);
-            font-weight: 700;
-            letter-spacing: -0.02em;
-            line-height: 1.05;
-            margin-bottom: 1rem;
-        }
-
-        .cta-description {
-            font-size: 0.95rem;
-            color: var(--text-secondary);
-            line-height: 1.6;
-            max-width: 36ch;
-        }
-
-        .cta-form-wrapper {
-            /* Double-bezel container */
-            background: rgba(255, 255, 255, 0.02);
-            border: 1px solid var(--border);
-            border-radius: var(--radius-lg);
-            padding: 6px;
-        }
-
-        .cta-form-inner {
-            background: var(--surface);
-            border-radius: calc(var(--radius-lg) - 4px);
-            padding: clamp(1.5rem, 3vw, 2.5rem);
-            box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.04);
-        }
-
-        .form-label {
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 0.65rem;
-            letter-spacing: 0.12em;
-            text-transform: uppercase;
-            color: var(--text-muted);
-            display: block;
-            margin-bottom: 1rem;
-        }
-
-        .email-input {
-            width: 100%;
-            padding: 1rem 1.25rem;
-            font-size: 1rem;
-            font-family: 'Space Grotesk', sans-serif;
-            background: #111111;
-            border: 1px solid rgba(255, 255, 255, 0.15);
-            border-radius: 0.75rem;
-            color: var(--text-primary);
-            outline: none;
-            transition: border-color 0.4s var(--ease-out-expo),
-                        box-shadow 0.4s var(--ease-out-expo);
-        }
-
-        .email-input::placeholder {
-            color: #666666;
-        }
-
-        .email-input:focus {
-            border-color: var(--emerald);
-            box-shadow: 0 0 0 3px rgba(3, 96, 22, 0.2);
-        }
-
-        .submit-btn {
-            width: 100%;
-            padding: 1rem;
-            font-size: 0.95rem;
-            font-weight: 600;
-            font-family: 'Space Grotesk', sans-serif;
-            background: var(--emerald);
-            color: var(--text-primary);
-            border: none;
-            border-radius: 0.75rem;
-            cursor: pointer;
-            margin-top: 0.75rem;
-            transition: background-color 0.4s var(--ease-out-expo),
-                        transform 0.15s var(--ease-out-expo);
-            letter-spacing: 0.01em;
-        }
-
-        .submit-btn:hover {
-            background: var(--emerald-light);
-        }
-
-        .submit-btn:active {
-            transform: translateY(1px) scale(0.98);
-        }
-
-        .success-message {
-            display: none;
-            padding: 1.25rem;
-            background: var(--emerald);
-            color: var(--text-primary);
-            font-size: 0.95rem;
-            font-weight: 600;
-            border-radius: 0.75rem;
-            text-align: center;
-        }
+        /* --- Final CTA --- */
+        .final { border-radius: calc(var(--radius-lg) + .5rem); padding: clamp(2.5rem, 7vw, 5rem); position: relative; overflow: hidden;
+            background: radial-gradient(90% 140% at 100% 100%, rgba(3,96,22,.55), transparent 60%), var(--surface); border: 1px solid var(--border); }
+        .final h2 { font-size: clamp(2.4rem, 6.5vw, 4.8rem); max-width: 14ch; }
+        .final .lead { margin-top: 1.2rem; }
+        .final .hero-actions { margin-top: 2.2rem; }
 
         /* --- Footer --- */
-        .site-footer {
-            border-top: 1px solid var(--border);
-            padding: clamp(2rem, 5vw, 3rem) 0;
-        }
+        footer { border-top: 1px solid var(--border); padding: 3rem 0 6rem; margin-top: clamp(4rem, 8vw, 6rem); }
+        .foot { display: grid; grid-template-columns: 2fr repeat(3, 1fr); gap: 2rem; }
+        @media (max-width: 760px) { .foot { grid-template-columns: 1fr 1fr; } .foot > :first-child { grid-column: 1 / -1; } }
+        .foot h4 { font-family: var(--mono); font-size: .7rem; letter-spacing: .12em; text-transform: uppercase; color: var(--text-muted); font-weight: 500; margin-bottom: 1rem; }
+        .foot ul { list-style: none; display: grid; gap: .55rem; font-size: .92rem; color: var(--text-secondary); }
+        .foot a:hover { color: var(--text-primary); }
+        .foot .tagline { color: var(--text-secondary); margin-top: 1rem; max-width: 22rem; font-size: .95rem; }
+        .copy { font-family: var(--mono); font-size: .72rem; color: var(--text-muted); margin-top: 3rem; }
+        .accent-bar { position: fixed; bottom: 0; left: 0; right: 0; height: 3px; z-index: 60; background: linear-gradient(90deg, var(--emerald) 0%, var(--emerald) 70%, var(--gold) 70%, var(--gold) 100%); }
 
-        .footer-grid {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-        }
+        /* --- Mobile sticky CTA --- */
+        .sticky-cta { position: fixed; left: 1rem; right: 1rem; bottom: 1rem; z-index: 55; display: none; transform: translateY(150%); transition: transform .5s var(--ease); }
+        .sticky-cta .btn { width: 100%; }
+        .sticky-cta.show { transform: none; }
+        @media (max-width: 700px) { .sticky-cta { display: block; } }
 
-        .footer-links {
-            display: flex;
-            gap: 2rem;
-        }
-
-        .footer-links a {
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 0.7rem;
-            letter-spacing: 0.1em;
-            text-transform: uppercase;
-            color: var(--text-muted);
-            text-decoration: none;
-            transition: color 0.4s var(--ease-out-expo);
-        }
-
-        .footer-links a:hover {
-            color: var(--text-primary);
-        }
-
-        .footer-copy {
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 0.65rem;
-            letter-spacing: 0.08em;
-            color: var(--text-muted);
-        }
-
-        /* --- Emerald accent bar --- */
-        .accent-bar {
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            width: 100%;
-            height: 3px;
-            background: linear-gradient(90deg, var(--emerald), var(--emerald-light));
-            z-index: 40;
-        }
-
-        /* --- Responsive --- */
-        @media (max-width: 768px) {
-            .hero-title {
-                max-width: 100%;
-            }
-
-            .hero-form-row {
-                grid-template-columns: 1fr;
-            }
-
-            .hero-submit-btn {
-                width: 100%;
-            }
-
-            .stats-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .pain-header {
-                grid-template-columns: 1fr;
-                gap: 1.5rem;
-            }
-
-            .pain-list {
-                grid-template-columns: 1fr;
-            }
-
-            .cta-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .footer-grid {
-                flex-direction: column;
-                gap: 1.5rem;
-                text-align: center;
-            }
-
-            .footer-links {
-                order: -1;
-            }
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after { animation: none !important; transition: none !important; scroll-behavior: auto !important; }
+            .js .reveal, .js .chart i { opacity: 1; transform: none; filter: none; }
         }
     </style>
 </head>
 <body>
 
-    <div class="page-wrapper">
-
-        <!-- Nav -->
-        <nav class="nav reveal">
-            <div class="logo-mark">N</div>
-            <div class="nav-status">
-                <span></span>Em construção
-            </div>
-        </nav>
-
-        <!-- Hero — Before-After-Bridge + Primary CTA -->
-        <section class="hero">
-            <div class="hero-grid">
-                <div>
-                    <p class="hero-eyebrow reveal reveal-delay-1">50+ equipas. O mesmo problema.</p>
-                    <h1 class="hero-title reveal reveal-delay-2">
-                        Toca no <span class="accent">nervo</span> do teu orçamento.
-                    </h1>
-                    <p class="hero-description reveal reveal-delay-3">
-                        O teu orçamento vive num Excel que ninguém percebe,
-                        numa versão que ninguém confirmou,
-                        com números em que ninguém confia.
-                    </p>
-                    <p class="hero-description hero-closer reveal reveal-delay-3">
-                        Estamos a acabar com isso.
-                    </p>
-
-                    <!-- Inline waitlist form -->
-                    <div class="hero-form reveal reveal-delay-4">
-                        <form class="hero-form-row" id="hero-waitlist-form" action="https://formspree.io/f/xnjodeda" method="POST">
-                            <input
-                                type="email"
-                                class="email-input"
-                                name="email"
-                                placeholder="nome@empresa.pt"
-                                required
-                            >
-                            <button type="submit" class="submit-btn hero-submit-btn">Entrar na lista</button>
-                        </form>
-                        <div class="success-message" id="hero-success-message">
-                            Estás dentro. Falamos em breve.
-                        </div>
-                        <p class="hero-form-hint">Sem spam. Só o que interessa.</p>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- Stats — Cost of Inaction -->
-        <section class="stats-section reveal">
-            <div class="stats-grid">
-                <div class="stat-cell reveal reveal-delay-1">
-                    <div class="stat-number">86%</div>
-                    <div class="stat-label">PMEs em Excel</div>
-                    <p class="stat-description">Sem versão única. Sem auditoria. Sem rede. E toda a gente finge que está tudo bem.</p>
-                </div>
-                <div class="stat-cell reveal reveal-delay-2">
-                    <div class="stat-number">400h</div>
-                    <div class="stat-label">Desperdiçadas / ano</div>
-                    <p class="stat-description">A copiar, colar e rezar para que as fórmulas estejam certas. Todos os meses. Há anos.</p>
-                </div>
-                <div class="stat-cell reveal reveal-delay-3">
-                    <div class="stat-number">10min</div>
-                    <div class="stat-label">Não 10 dias</div>
-                    <p class="stat-description">É tudo o que devias precisar para tomar uma decisão orçamental. Não uma semana.</p>
-                </div>
-            </div>
-        </section>
-
-        <!-- Marquee Band -->
-        <div class="marquee-band">
-            <div class="marquee-track">
-                <span class="marquee-item"><span class="dot"></span>Excel não é orçamento</span>
-                <span class="marquee-item"><span class="dot"></span>Copiar colar não é controlo</span>
-                <span class="marquee-item"><span class="dot"></span>3 versões não é gestão</span>
-                <span class="marquee-item"><span class="dot"></span>Rezar não é auditoria</span>
-                <span class="marquee-item"><span class="dot"></span>"Quando há tempo" é nunca</span>
-                <span class="marquee-item"><span class="dot"></span>Fingir não é confiança</span>
-                <span class="marquee-item"><span class="dot"></span>Excel não é orçamento</span>
-                <span class="marquee-item"><span class="dot"></span>Copiar colar não é controlo</span>
-                <span class="marquee-item"><span class="dot"></span>3 versões não é gestão</span>
-                <span class="marquee-item"><span class="dot"></span>Rezar não é auditoria</span>
-                <span class="marquee-item"><span class="dot"></span>"Quando há tempo" é nunca</span>
-                <span class="marquee-item"><span class="dot"></span>Fingir não é confiança</span>
+    <!-- Nav -->
+    <header class="nav" id="nav">
+        <div class="wrap nav-inner">
+            <a href="#top" class="brand" aria-label="O Nervo — início">
+                <span class="logo-mark" aria-hidden="true">N</span>
+                <span class="brand-name">O Nervo</span>
+            </a>
+            <nav class="nav-links" aria-label="Secções">
+                <a href="#como-funciona">Como funciona</a>
+                <a href="#funcionalidades">Funcionalidades</a>
+                <a href="#precos">Preços</a>
+                <a href="#faq">FAQ</a>
+            </nav>
+            <div class="nav-cta">
+                <a class="btn btn-ghost" href="https://app.onervo.pt/auth">Entrar</a>
+                <a class="btn btn-primary" href="https://app.onervo.pt/auth?tab=signup">Começar grátis</a>
             </div>
         </div>
+    </header>
 
-        <!-- Pain Points — PAS: Problem-Agitate-Solution -->
-        <section class="pain-section">
-            <div class="pain-header">
-                <div class="reveal">
-                    <p class="pain-label">O diagnóstico</p>
-                    <h2 class="pain-title">Vimos isto em todas.</h2>
-                </div>
-                <div class="reveal reveal-delay-2">
-                    <p class="pain-subtitle">50+ equipas financeiras de PMEs portuguesas. Mesmo sector, mesma dimensão, mesmo caos. Ninguém toca no nervo.</p>
-                </div>
-            </div>
+    <main id="top">
 
-            <div class="pain-list">
-                <div class="pain-item reveal reveal-delay-1">
-                    <span class="pain-index">01</span>
-                    <p class="pain-text"><strong>Excel com +20 separadores</strong>, zero documentação. O autor saiu da empresa há 2 anos. Ninguém sabe como funciona.</p>
+        <!-- Hero -->
+        <section class="hero">
+            <div class="wrap hero-grid">
+                <div>
+                    <p class="eyebrow reveal">Orçamento e controlo de gestão para PME</p>
+                    <h1 class="reveal d1">Toca no <span class="accent">nervo</span> do teu orçamento.</h1>
+                    <p class="lead reveal d2">
+                        Sai do Excel que ninguém percebe. Importa os teus ficheiros ou o SAF-T da contabilidade,
+                        monta o orçamento e vê, todos os meses, onde estás a ganhar e a perder dinheiro.
+                    </p>
+                    <div class="hero-actions reveal d3">
+                        <a class="btn btn-primary btn-lg" href="https://app.onervo.pt/auth?tab=signup">Começar 14 dias grátis <span class="arrow">→</span></a>
+                        <a class="btn btn-ghost btn-lg" href="#precos">Ver preços</a>
+                    </div>
+                    <div class="hero-trust reveal d4">
+                        <span>Sem cartão de crédito</span>
+                        <span>Servidores na UE · RGPD</span>
+                        <span>Cancela quando quiseres</span>
+                    </div>
                 </div>
-                <div class="pain-item reveal reveal-delay-2">
-                    <span class="pain-index">02</span>
-                    <p class="pain-text"><strong>3 versões do "orçamento final".</strong> Ninguém sabe qual é a certa. Ninguém pergunta.</p>
-                </div>
-                <div class="pain-item reveal reveal-delay-3">
-                    <span class="pain-index">03</span>
-                    <p class="pain-text"><strong>Análise de desvios</strong> feita "quando há tempo". Tradução: nunca.</p>
-                </div>
-                <div class="pain-item reveal reveal-delay-4">
-                    <span class="pain-index">04</span>
-                    <p class="pain-text"><strong>Toda a gente finge que confia nos números.</strong> Ninguém confia. As decisões pagam o preço.</p>
-                </div>
-            </div>
-        </section>
 
-        <!-- CTA — AIDA: Attention-Interest-Desire-Action -->
-        <section class="cta-section">
-            <div class="cta-grid">
-                <div class="cta-content reveal">
-                    <p class="cta-eyebrow">Acesso antecipado</p>
-                    <h2 class="cta-title">Tens nervo para mudar?</h2>
-                    <p class="cta-description">Estamos a construir o que o Excel nunca vai ser. Deixa o teu email &mdash; avisamos antes de todos.</p>
-                </div>
-                <div class="reveal reveal-delay-2">
-                    <div class="cta-form-wrapper">
-                        <div class="cta-form-inner">
-                            <label class="form-label" for="email-input">O teu email</label>
-                            <form id="waitlist-form" action="https://formspree.io/f/xnjodeda" method="POST">
-                                <input
-                                    type="email"
-                                    class="email-input"
-                                    name="email"
-                                    placeholder="nome@empresa.pt"
-                                    required
-                                    id="email-input"
-                                >
-                                <button type="submit" class="submit-btn">Entrar na lista</button>
-                            </form>
-                            <div class="success-message" id="success-message">
-                                Estás dentro. Falamos em breve.
+                <div class="reveal d2">
+                    <div class="preview-shell">
+                        <div class="preview" role="img" aria-label="Ilustração do painel do O Nervo: orçamento versus real por mês, com um desvio crítico em abril e uma resposta da IA.">
+                            <div class="preview-top">
+                                <div class="dots" aria-hidden="true"><i></i><i></i><i></i></div>
+                                <span class="tag">Orçamento vs Real</span>
+                            </div>
+                            <div class="kpis" aria-hidden="true">
+                                <div class="kpi"><small>Vendas</small><b class="up">+4,2%</b></div>
+                                <div class="kpi"><small>Gastos</small><b class="down">+7,8%</b></div>
+                                <div class="kpi"><small>Margem</small><b>−1,1 pp</b></div>
+                            </div>
+                            <div class="chart" id="chart" aria-hidden="true">
+                                <div class="bar-pair"><i class="b" style="height:58%"></i><i class="r" style="height:54%"></i></div>
+                                <div class="bar-pair"><i class="b" style="height:62%"></i><i class="r" style="height:66%"></i></div>
+                                <div class="bar-pair"><i class="b" style="height:70%"></i><i class="r" style="height:68%"></i></div>
+                                <div class="bar-pair"><i class="b" style="height:66%"></i><i class="r over" style="height:88%"></i></div>
+                                <div class="bar-pair"><i class="b" style="height:74%"></i><i class="r" style="height:72%"></i></div>
+                                <div class="bar-pair"><i class="b" style="height:80%"></i><i class="r" style="height:83%"></i></div>
+                            </div>
+                            <div class="chart-labels" aria-hidden="true"><span>Jan</span><span>Fev</span><span>Mar</span><span>Abr</span><span>Mai</span><span>Jun</span></div>
+                            <div class="legend" aria-hidden="true"><span class="lb">Orçamento</span><span class="lr">Real</span><span class="lo">Desvio crítico</span></div>
+                            <div class="ask" aria-hidden="true">
+                                <div class="q">› Porque é que os gastos subiram em abril?</div>
+                                <div class="a" id="typed"></div>
                             </div>
                         </div>
                     </div>
+                    <p class="preview-note">Ilustração · valores de exemplo</p>
                 </div>
             </div>
         </section>
 
-        <!-- Footer -->
-        <footer class="site-footer">
-            <div class="footer-grid">
-                <p class="footer-copy">&copy; 2026 O Nervo &mdash; onervo.pt</p>
-                <div class="footer-links">
-                    <a href="https://www.linkedin.com/company/onervo-pt" target="_blank" rel="noopener">LinkedIn</a>
-                    <a href="https://www.instagram.com/onervo.pt" target="_blank" rel="noopener">Instagram</a>
+        <!-- Marquee -->
+        <div class="marquee" aria-hidden="true">
+            <div class="marquee-track">
+                <span class="marquee-item">Excel não é orçamento</span>
+                <span class="marquee-item">Copiar e colar não é controlo</span>
+                <span class="marquee-item">3 versões não é gestão</span>
+                <span class="marquee-item">Rezar não é auditoria</span>
+                <span class="marquee-item">"Quando há tempo" é nunca</span>
+                <span class="marquee-item">Fingir não é confiança</span>
+                <span class="marquee-item">Excel não é orçamento</span>
+                <span class="marquee-item">Copiar e colar não é controlo</span>
+                <span class="marquee-item">3 versões não é gestão</span>
+                <span class="marquee-item">Rezar não é auditoria</span>
+                <span class="marquee-item">"Quando há tempo" é nunca</span>
+                <span class="marquee-item">Fingir não é confiança</span>
+            </div>
+        </div>
+
+        <!-- Pain -->
+        <section>
+            <div class="wrap split">
+                <div class="reveal">
+                    <p class="eyebrow">O diagnóstico</p>
+                    <h2>Conheces<br>esta empresa.</h2>
+                    <p class="lead" style="margin-top:1.2rem">Mesmo sector, mesma dimensão, o mesmo caos. Ninguém toca no nervo — até ser tarde.</p>
+                </div>
+                <div class="pain-list">
+                    <div class="pain-item reveal d1"><span class="idx">01</span><p><strong>Excel com +20 separadores</strong> e zero documentação. O autor saiu há 2 anos. Ninguém sabe como funciona.</p></div>
+                    <div class="pain-item reveal d2"><span class="idx">02</span><p><strong>3 versões do "orçamento final".</strong> Ninguém sabe qual é a certa. Ninguém pergunta.</p></div>
+                    <div class="pain-item reveal d3"><span class="idx">03</span><p><strong>Análise de desvios</strong> feita "quando há tempo". Tradução: nunca.</p></div>
+                    <div class="pain-item reveal d4"><span class="idx">04</span><p><strong>Toda a gente finge que confia nos números.</strong> Ninguém confia. As decisões pagam o preço.</p></div>
                 </div>
             </div>
-        </footer>
+        </section>
 
+        <!-- How it works -->
+        <section id="como-funciona">
+            <div class="wrap">
+                <div class="section-head">
+                    <div class="reveal">
+                        <p class="eyebrow">Como funciona</p>
+                        <h2>Do Excel à decisão.<br><span class="gold">Em três passos.</span></h2>
+                    </div>
+                    <p class="lead reveal d1">Não tens de deitar fora o que já tens. O Nervo começa pelos teus ficheiros.</p>
+                </div>
+                <div class="steps">
+                    <article class="step reveal d1">
+                        <span class="k">Importa</span>
+                        <h3>Traz o que já tens</h3>
+                        <p>Carrega o Excel ou CSV do orçamento e os reais da contabilidade. A IA reconhece as colunas e propõe o mapeamento — tu só confirmas.</p>
+                        <div class="chips"><span class="chip">.xlsx</span><span class="chip">.csv</span><span class="chip">SAF-T</span><span class="chip">Mapeamento IA</span></div>
+                    </article>
+                    <article class="step reveal d2">
+                        <span class="k">Planeia</span>
+                        <h3>Uma versão. A certa.</h3>
+                        <p>Cria o orçamento, gera cenários com ajustes em %, compara-os e aprova o que vai ser seguido. Acabou o "final_v3_ok.xlsx".</p>
+                        <div class="chips"><span class="chip">Versões</span><span class="chip">Cenários</span><span class="chip">Reforecast</span></div>
+                    </article>
+                    <article class="step reveal d3">
+                        <span class="k">Decide</span>
+                        <h3>Desvios todos os meses</h3>
+                        <p>Orçamento vs real, mês a mês e por categoria. Alertas quando algo foge, respostas da IA sobre os teus números e relatório de gestão em PDF.</p>
+                        <div class="chips"><span class="chip">Desvios</span><span class="chip">Anomalias</span><span class="chip">PDF</span></div>
+                    </article>
+                </div>
+            </div>
+        </section>
+
+        <!-- Features -->
+        <section id="funcionalidades">
+            <div class="wrap">
+                <div class="section-head">
+                    <div class="reveal">
+                        <p class="eyebrow">Funcionalidades</p>
+                        <h2>O nervo central<br>das tuas finanças.</h2>
+                    </div>
+                </div>
+                <div class="bento">
+                    <article class="card wide hl reveal">
+                        <div class="ic" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l1.9 5.8L20 10l-6.1 1.2L12 17l-1.9-5.8L4 10l6.1-1.2z"/></svg></div>
+                        <h3>Pergunta ao Nervo</h3>
+                        <p>"Porque baixou a margem em março?" Respostas em português, baseadas nos dados reais da tua empresa — e só nos números que tens permissão para ver.</p>
+                    </article>
+                    <article class="card wide reveal d1">
+                        <div class="ic" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg></div>
+                        <h3>Multiempresa e consolidado</h3>
+                        <p>Gere várias empresas do grupo e vê os números consolidados num só painel, sem folhas de ligação.</p>
+                    </article>
+                    <article class="card reveal d1">
+                        <div class="ic" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><path d="M14 3v6h6M9 15l2 2 4-4"/></svg></div>
+                        <h3>SAF-T da contabilidade</h3>
+                        <p>Pede o SAF-T ao contabilista e importa-o. Os movimentos são agrupados por mês e por conta.</p>
+                    </article>
+                    <article class="card reveal d2">
+                        <div class="ic" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0zM12 9v4M12 17h.01"/></svg></div>
+                        <h3>Deteção de anomalias</h3>
+                        <p>Desvios fora do normal são sinalizados antes de se tornarem um problema no fecho do ano.</p>
+                    </article>
+                    <article class="card reveal d3">
+                        <div class="ic" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9V2h12v7M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg></div>
+                        <h3>Relatório de gestão</h3>
+                        <p>Relatório pronto para a administração, com as tuas notas, em PDF ou Excel.</p>
+                    </article>
+                    <article class="card wide reveal d1">
+                        <div class="ic" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><path d="m19 9-5 5-4-4-3 3"/></svg></div>
+                        <h3>Tesouraria</h3>
+                        <p>Do saldo inicial ao saldo no fim do ano, a partir do orçamento que já fizeste.</p>
+                    </article>
+                    <article class="card wide reveal d2">
+                        <div class="ic" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.9M16 3.1a4 4 0 0 1 0 7.8"/></svg></div>
+                        <h3>Equipa, permissões e dados isolados</h3>
+                        <p>Convida a equipa com o nível de acesso certo. Cada empresa tem os dados isolados, encriptados e alojados na UE.</p>
+                    </article>
+                </div>
+            </div>
+        </section>
+
+        <!-- Calculator -->
+        <section id="calculadora">
+            <div class="wrap">
+                <div class="section-head">
+                    <div class="reveal">
+                        <p class="eyebrow">Faz as contas</p>
+                        <h2>Quanto te custa<br>o Excel <span class="gold">por ano?</span></h2>
+                    </div>
+                    <p class="lead reveal d1">Põe os teus números. Conta só o tempo gasto a copiar, colar, consolidar e corrigir fórmulas.</p>
+                </div>
+                <div class="calc reveal">
+                    <div class="calc-in">
+                        <div class="field">
+                            <div class="field-top"><label for="people">Pessoas envolvidas</label><output id="o-people" for="people">2</output></div>
+                            <input type="range" id="people" min="1" max="10" step="1" value="2">
+                        </div>
+                        <div class="field">
+                            <div class="field-top"><label for="hours">Horas por pessoa, por mês</label><output id="o-hours" for="hours">12 h</output></div>
+                            <input type="range" id="hours" min="2" max="60" step="1" value="12">
+                        </div>
+                        <div class="field">
+                            <div class="field-top"><label for="rate">Custo por hora (€)</label><output id="o-rate" for="rate">25 €</output></div>
+                            <input type="range" id="rate" min="10" max="100" step="5" value="25">
+                        </div>
+                        <p class="calc-note">Calculado no teu browser só com os valores que escolheste. Nada é enviado.</p>
+                    </div>
+                    <div class="calc-out" aria-live="polite">
+                        <span class="eyebrow">Custo anual estimado</span>
+                        <div class="big-number" id="cost">7200 €</div>
+                        <p class="sub" id="cost-sub">288 horas por ano em folhas de cálculo.</p>
+                        <p class="compare">O plano Pro anual custa <b>780 €/ano</b>, para até 5 empresas e 5 pessoas.</p>
+                        <a class="btn btn-primary" href="https://app.onervo.pt/auth?tab=signup">Experimentar 14 dias grátis <span class="arrow">→</span></a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Pricing -->
+        <section id="precos">
+            <div class="wrap">
+                <div class="section-head">
+                    <div class="reveal">
+                        <p class="eyebrow">Preços</p>
+                        <h2>Simples. Sem<br>letras pequenas.</h2>
+                        <p class="lead" style="margin-top:1rem">14 dias grátis com todas as funcionalidades do Pro. Sem cartão de crédito.</p>
+                    </div>
+                    <div class="toggle reveal d1" role="group" aria-label="Período de faturação">
+                        <button type="button" id="bill-monthly" aria-pressed="true">Mensal</button>
+                        <button type="button" id="bill-annual" aria-pressed="false">Anual<span class="save">−18%</span></button>
+                    </div>
+                </div>
+
+                <div class="plans">
+                    <article class="plan reveal d1">
+                        <h3>Starter</h3>
+                        <p class="desc">Para quem está a começar a organizar orçamentos.</p>
+                        <div class="price"><b data-monthly="29,99" data-annual="24,58">29,99</b><span>€/mês</span></div>
+                        <p class="billed" data-monthly-note="Faturado mensalmente" data-annual-note="Faturado 295 € por ano">Faturado mensalmente</p>
+                        <ul>
+                            <li>1 empresa</li>
+                            <li>Mapeamento de colunas com IA ilimitado</li>
+                            <li>3 resumos de IA por mês</li>
+                            <li>3 cenários de orçamento</li>
+                            <li>Exportação para Excel</li>
+                            <li>Suporte por email</li>
+                        </ul>
+                        <a class="btn btn-ghost" href="https://app.onervo.pt/auth?tab=signup">Começar grátis</a>
+                    </article>
+
+                    <article class="plan hl reveal d2">
+                        <span class="badge">Recomendado</span>
+                        <h3>Pro</h3>
+                        <p class="desc">Para PME com várias empresas.</p>
+                        <div class="price"><b data-monthly="79" data-annual="65">79</b><span>€/mês</span></div>
+                        <p class="billed" data-monthly-note="Faturado mensalmente" data-annual-note="Faturado 780 € por ano">Faturado mensalmente</p>
+                        <ul>
+                            <li>Até 5 empresas</li>
+                            <li>Até 5 membros de equipa</li>
+                            <li>Vista consolidada multiempresa</li>
+                            <li>Resumos de IA ilimitados</li>
+                            <li>Deteção de anomalias</li>
+                            <li>Cenários ilimitados</li>
+                            <li>Exportação para Excel e PDF</li>
+                            <li>Suporte prioritário</li>
+                        </ul>
+                        <a class="btn btn-primary" href="https://app.onervo.pt/auth?tab=signup">Começar grátis <span class="arrow">→</span></a>
+                    </article>
+
+                    <article class="plan reveal d3">
+                        <h3>Enterprise</h3>
+                        <p class="desc">Para grupos empresariais e consultoras.</p>
+                        <div class="price"><b class="custom">Por medida</b></div>
+                        <p class="billed">Proposta à medida do grupo</p>
+                        <ul>
+                            <li>Tudo o que o Pro inclui</li>
+                            <li>Empresas e membros ilimitados</li>
+                            <li>SSO / SAML</li>
+                            <li>Acesso à API</li>
+                            <li>Gestor de conta dedicado</li>
+                            <li>SLA personalizado</li>
+                        </ul>
+                        <a class="btn btn-ghost" href="mailto:vendas@onervo.pt?subject=O%20Nervo%20Enterprise">Falar connosco</a>
+                    </article>
+                </div>
+                <p class="pricing-note">Já tens conta? <a class="inline-link" href="https://app.onervo.pt/auth">Entra aqui</a> e muda de plano em Definições.</p>
+            </div>
+        </section>
+
+        <!-- FAQ -->
+        <section id="faq">
+            <div class="wrap split">
+                <div class="reveal">
+                    <p class="eyebrow">Perguntas frequentes</p>
+                    <h2>Antes de<br>começares.</h2>
+                    <p class="lead" style="margin-top:1.2rem">Outra dúvida? Escreve para <a class="inline-link" href="mailto:suporte@onervo.pt">suporte@onervo.pt</a>.</p>
+                </div>
+                <div class="faq">
+                    <details class="reveal d1"><summary>Preciso de deixar o Excel?</summary><p>Não. O Nervo importa os teus ficheiros atuais e podes continuar a exportar para Excel sempre que precisares.</p></details>
+                    <details class="reveal d1"><summary>Existe período de teste?</summary><p>Sim. 14 dias grátis com todas as funcionalidades do plano Pro, sem cartão de crédito. No fim escolhes o plano — ou não.</p></details>
+                    <details class="reveal d2"><summary>Os meus dados estão seguros?</summary><p>Dados encriptados, servidores na UE, isolamento por empresa com Row Level Security e conformidade com o RGPD.</p></details>
+                    <details class="reveal d2"><summary>Funciona com várias empresas?</summary><p>Sim. Com o plano Pro podes ter até 5 empresas e ver os dados consolidados de todas.</p></details>
+                    <details class="reveal d3"><summary>Posso mudar de plano ou cancelar?</summary><p>Sim. Sobe, desce ou cancela quando quiseres, a partir das Definições. A diferença é calculada proporcionalmente.</p></details>
+                    <details class="reveal d3"><summary>Funciona com o meu contabilista?</summary><p>Sim. Basta pedires o ficheiro SAF-T de contabilidade e importá-lo. Também podes carregar o extrato de contas ou o balancete em Excel ou CSV.</p></details>
+                </div>
+            </div>
+        </section>
+
+        <!-- Final CTA -->
+        <section>
+            <div class="wrap">
+                <div class="final reveal">
+                    <p class="eyebrow">Acalma o nervo</p>
+                    <h2>Tens nervo<br>para <span class="gold">mudar?</span></h2>
+                    <p class="lead">Cria a conta, importa o primeiro ficheiro e vê os teus desvios ainda hoje.</p>
+                    <div class="hero-actions">
+                        <a class="btn btn-primary btn-lg" href="https://app.onervo.pt/auth?tab=signup">Começar 14 dias grátis <span class="arrow">→</span></a>
+                        <a class="btn btn-ghost btn-lg" href="https://app.onervo.pt/auth">Já tenho conta</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="wrap">
+            <div class="foot">
+                <div>
+                    <a href="#top" class="brand"><span class="logo-mark" aria-hidden="true">N</span><span>O Nervo</span></a>
+                    <p class="tagline">Orçamento, desvios e IA para PME portuguesas. Toca no nervo do teu orçamento.</p>
+                </div>
+                <div>
+                    <h4>Produto</h4>
+                    <ul>
+                        <li><a href="#como-funciona">Como funciona</a></li>
+                        <li><a href="#funcionalidades">Funcionalidades</a></li>
+                        <li><a href="#precos">Preços</a></li>
+                        <li><a href="https://app.onervo.pt/auth">Entrar</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4>Contacto</h4>
+                    <ul>
+                        <li><a href="mailto:suporte@onervo.pt">suporte@onervo.pt</a></li>
+                        <li><a href="mailto:vendas@onervo.pt">vendas@onervo.pt</a></li>
+                        <li><a href="https://www.linkedin.com/company/onervo-pt" target="_blank" rel="noopener">LinkedIn</a></li>
+                        <li><a href="https://www.instagram.com/onervo.pt" target="_blank" rel="noopener">Instagram</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4>Legal</h4>
+                    <ul>
+                        <li><a href="https://app.onervo.pt/terms">Termos</a></li>
+                        <li><a href="https://app.onervo.pt/privacy">Privacidade</a></li>
+                    </ul>
+                </div>
+            </div>
+            <p class="copy">© <span id="year">2026</span> O Nervo — onervo.pt</p>
+        </div>
+    </footer>
+
+    <div class="sticky-cta" id="sticky-cta">
+        <a class="btn btn-primary btn-lg" href="https://app.onervo.pt/auth?tab=signup">Começar 14 dias grátis →</a>
     </div>
-
-    <div class="accent-bar"></div>
+    <div class="accent-bar" aria-hidden="true"></div>
 
     <script>
-        // Scroll reveal with IntersectionObserver
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach((entry) => {
-                if (entry.isIntersecting) {
-                    entry.target.classList.add('visible');
-                }
-            });
-        }, {
-            threshold: 0.1,
-            rootMargin: '0px 0px -60px 0px'
-        });
+        (function () {
+            var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+            document.getElementById('year').textContent = new Date().getFullYear();
 
-        document.querySelectorAll('.reveal').forEach((el) => observer.observe(el));
+            // Reveal on scroll
+            var io = new IntersectionObserver(function (entries) {
+                entries.forEach(function (e) { if (e.isIntersecting) { e.target.classList.add('visible'); io.unobserve(e.target); } });
+            }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
+            document.querySelectorAll('.reveal').forEach(function (el) { io.observe(el); });
 
-        // Counter animation on stat numbers
-        function animateCounter(el) {
-            const text = el.textContent.trim();
-            const match = text.match(/^([\d.]+)(.*)$/);
-            if (!match) return;
-
-            const target = parseFloat(match[1]);
-            const suffix = match[2];
-            const duration = 1800;
-            const start = performance.now();
-            const isDecimal = match[1].includes('.');
-
-            function tick(now) {
-                const elapsed = now - start;
-                const progress = Math.min(elapsed / duration, 1);
-                const eased = 1 - Math.pow(1 - progress, 4);
-                const current = eased * target;
-
-                el.textContent = (isDecimal ? current.toFixed(1) : Math.floor(current)) + suffix;
-
-                if (progress < 1) requestAnimationFrame(tick);
+            // Nav border + mobile sticky CTA (hidden near the final CTA)
+            var nav = document.getElementById('nav');
+            var sticky = document.getElementById('sticky-cta');
+            var finalCta = document.querySelector('.final');
+            function onScroll() {
+                var y = window.scrollY;
+                nav.classList.toggle('scrolled', y > 8);
+                var nearEnd = finalCta.getBoundingClientRect().top < window.innerHeight;
+                sticky.classList.toggle('show', y > 640 && !nearEnd);
             }
+            window.addEventListener('scroll', onScroll, { passive: true });
+            onScroll();
 
-            el.textContent = '0' + suffix;
-            requestAnimationFrame(tick);
-        }
+            // Chart grows and the illustrative AI answer types itself once the preview is visible
+            var chart = document.getElementById('chart');
+            var typed = document.getElementById('typed');
+            var answer = 'Abril ficou acima do orçado sobretudo em Fornecimentos e serviços externos (transportes). As restantes rubricas estão dentro do previsto.';
+            var previewIO = new IntersectionObserver(function (entries) {
+                if (!entries[0].isIntersecting) return;
+                previewIO.disconnect();
+                chart.classList.add('grown');
+                if (reduced) { typed.textContent = answer; typed.classList.add('done'); return; }
+                var i = 0;
+                setTimeout(function tick() {
+                    typed.textContent = answer.slice(0, ++i);
+                    if (i < answer.length) setTimeout(tick, 18); else typed.classList.add('done');
+                }, 900);
+            }, { threshold: 0.3 });
+            previewIO.observe(chart);
 
-        const counterObserver = new IntersectionObserver((entries) => {
-            entries.forEach((entry) => {
-                if (entry.isIntersecting) {
-                    animateCounter(entry.target);
-                    counterObserver.unobserve(entry.target);
-                }
-            });
-        }, { threshold: 0.5 });
+            // Cost calculator — uses only the visitor's own inputs
+            var fmt = new Intl.NumberFormat('pt-PT', { maximumFractionDigits: 0, useGrouping: true });
+            var people = document.getElementById('people');
+            var hours = document.getElementById('hours');
+            var rate = document.getElementById('rate');
+            function paint(input) {
+                var p = (input.value - input.min) / (input.max - input.min) * 100;
+                input.style.setProperty('--p', p + '%');
+            }
+            function calc() {
+                var h = people.value * hours.value * 12;
+                var cost = h * rate.value;
+                document.getElementById('o-people').textContent = people.value;
+                document.getElementById('o-hours').textContent = hours.value + ' h';
+                document.getElementById('o-rate').textContent = rate.value + ' €';
+                document.getElementById('cost').textContent = fmt.format(cost) + ' €';
+                document.getElementById('cost-sub').textContent = fmt.format(h) + ' horas por ano em folhas de cálculo.';
+                [people, hours, rate].forEach(paint);
+            }
+            [people, hours, rate].forEach(function (el) { el.addEventListener('input', calc); });
+            calc();
 
-        document.querySelectorAll('.stat-number').forEach((el) => counterObserver.observe(el));
-
-        // Form submission — handles both hero and bottom CTA forms
-        function setupForm(formId, successId) {
-            const form = document.getElementById(formId);
-            const successMsg = document.getElementById(successId);
-            if (!form || !successMsg) return;
-
-            form.addEventListener('submit', async (e) => {
-                e.preventDefault();
-                const formData = new FormData(form);
-
-                try {
-                    const response = await fetch(form.action, {
-                        method: 'POST',
-                        body: formData,
-                        headers: { 'Accept': 'application/json' }
-                    });
-
-                    if (response.ok) {
-                        form.style.display = 'none';
-                        successMsg.style.display = 'block';
-                    }
-                } catch (error) {
-                    form.style.display = 'none';
-                    successMsg.style.display = 'block';
-                }
-            });
-        }
-
-        setupForm('hero-waitlist-form', 'hero-success-message');
-        setupForm('waitlist-form', 'success-message');
+            // Monthly / annual toggle
+            var btnM = document.getElementById('bill-monthly');
+            var btnA = document.getElementById('bill-annual');
+            function setCycle(annual) {
+                btnM.setAttribute('aria-pressed', String(!annual));
+                btnA.setAttribute('aria-pressed', String(annual));
+                document.querySelectorAll('.price b[data-monthly]').forEach(function (b) {
+                    b.textContent = annual ? b.dataset.annual : b.dataset.monthly;
+                });
+                document.querySelectorAll('.billed[data-annual-note]').forEach(function (n) {
+                    n.textContent = annual ? n.dataset.annualNote : n.dataset.monthlyNote;
+                });
+            }
+            btnM.addEventListener('click', function () { setCycle(false); });
+            btnA.addEventListener('click', function () { setCycle(true); });
+        })();
     </script>
-
 </body>
 </html>
