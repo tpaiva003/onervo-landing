@@ -66,7 +66,7 @@ Landing page comercial do **O Nervo** — plataforma SaaS de controlo orcamental
 - **PROIBIDO:** Inter (banned pelos design skills — sem personalidade)
 
 ### Logo
-- Placeholder atual: letra "N" em branco sobre fundo preto com border subtil
+- Simbolo: "N" Space Grotesk Bold branco sobre #050505 com barra emerald/gold (70/30). Ficheiros: favicon.svg (fonte), favicon.ico, icon-*.png, og-image.png
 - Logo profissional: pendente
 
 ---

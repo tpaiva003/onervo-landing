@@ -14,11 +14,21 @@
     <meta property="og:url" content="https://onervo.pt/">
     <meta property="og:title" content="O Nervo — Toca no nervo do teu orçamento">
     <meta property="og:description" content="Do Excel à decisão: orçamento, desvios e IA para PME portuguesas. 14 dias grátis, sem cartão.">
-    <meta name="twitter:card" content="summary">
+    <meta property="og:image" content="https://onervo.pt/og-image.png">
+    <meta property="og:image:secure_url" content="https://onervo.pt/og-image.png">
+    <meta property="og:image:type" content="image/png">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:image:alt" content="O Nervo — Toca no nervo do teu orçamento. Orçamento e controlo de gestão para PME.">
+    <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="O Nervo — Toca no nervo do teu orçamento">
     <meta name="twitter:description" content="Do Excel à decisão: orçamento, desvios e IA para PME portuguesas.">
+    <meta name="twitter:image" content="https://onervo.pt/og-image.png">
 
-    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='4' fill='%23050505'/%3E%3Ctext x='16' y='23' text-anchor='middle' font-family='system-ui,-apple-system,sans-serif' font-weight='700' font-size='22' fill='%23f0f0f0'%3EN%3C/text%3E%3C/svg%3E">
+    <link rel="icon" href="/favicon.ico" sizes="48x48">
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+    <link rel="manifest" href="/site.webmanifest">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
@@ -33,9 +43,25 @@
         "operatingSystem": "Web",
         "inLanguage": "pt-PT",
         "description": "Orçamento, análise de desvios e IA para PME portuguesas. Importa Excel e SAF-T, multiempresa e relatório de gestão.",
+        "image": "https://onervo.pt/og-image.png",
         "offers": [
             { "@type": "Offer", "name": "Starter", "price": "29.99", "priceCurrency": "EUR", "url": "https://app.onervo.pt/pricing" },
             { "@type": "Offer", "name": "Pro", "price": "79.00", "priceCurrency": "EUR", "url": "https://app.onervo.pt/pricing" }
+        ]
+    }
+    </script>
+
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "Organization",
+        "name": "O Nervo",
+        "url": "https://onervo.pt/",
+        "logo": "https://onervo.pt/icon-512.png",
+        "email": "suporte@onervo.pt",
+        "sameAs": [
+            "https://www.linkedin.com/company/onervo-pt",
+            "https://www.instagram.com/onervo.pt"
         ]
     }
     </script>
@@ -127,10 +153,7 @@
         .nav.scrolled { border-bottom-color: var(--border); }
         .nav-inner { display: flex; align-items: center; justify-content: space-between; height: 68px; gap: 1rem; }
         .brand { display: flex; align-items: center; gap: .7rem; font-weight: 700; letter-spacing: -0.02em; }
-        .logo-mark {
-            width: 34px; height: 34px; border-radius: 8px; display: grid; place-items: center;
-            background: var(--bg); border: 1px solid var(--border-strong); font-weight: 700; font-size: 1.15rem;
-        }
+        .logo-mark { width: 34px; height: 34px; border-radius: 8px; display: block; box-shadow: 0 0 0 1px var(--border-strong); }
         .nav-links { display: flex; gap: 2rem; font-size: .92rem; color: var(--text-secondary); }
         .nav-links a:hover { color: var(--text-primary); }
         .nav-cta { display: flex; gap: .5rem; align-items: center; }
@@ -321,7 +344,7 @@
     <header class="nav" id="nav">
         <div class="wrap nav-inner">
             <a href="#top" class="brand" aria-label="O Nervo — início">
-                <span class="logo-mark" aria-hidden="true">N</span>
+                <img class="logo-mark" src="/favicon.svg" alt="" width="34" height="34">
                 <span class="brand-name">O Nervo</span>
             </a>
             <nav class="nav-links" aria-label="Secções">
@@ -657,7 +680,7 @@
         <div class="wrap">
             <div class="foot">
                 <div>
-                    <a href="#top" class="brand"><span class="logo-mark" aria-hidden="true">N</span><span>O Nervo</span></a>
+                    <a href="#top" class="brand"><img class="logo-mark" src="/favicon.svg" alt="" width="34" height="34"><span>O Nervo</span></a>
                     <p class="tagline">Orçamento, desvios e IA para PME portuguesas. Toca no nervo do teu orçamento.</p>
                 </div>
                 <div>
